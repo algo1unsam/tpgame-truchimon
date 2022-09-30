@@ -10,7 +10,13 @@ class Truchimon{
 	var property velocidad = null
 	var property ataqueEspecial = null
 	var property defensaEspecial = null
+	var property position = game.origin()
 	
+	const imagen = null
+	
+	method image(){
+		return imagen
+	}
 
 	method atacar(truchimon,movimiento){ //Al atacar a otro truchimon hago que ejecute su metodo recibirAtaque
 		truchimon.recibirAtaque(movimiento,self)
@@ -58,14 +64,25 @@ class Tipo{
 	var property debilidades = []
 	var property resistencias = []
 	
+	method agregarDebilidades(lista){
+		debilidades.addAll(lista)
+	}
+	method agregarResistencias(lista){
+		resistencias.addAll(lista)
+	}
+	
+	
 }
 const fuego = new Tipo()
 const agua = new Tipo(resistencias=[fuego])
 const planta = new Tipo(debilidades=[fuego],resistencias=[agua])
 const normal = new Tipo()
 
-const charmander = new Truchimon(nombre='charmander',tipo=fuego,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10)
-const bulbasaur = new Truchimon(nombre='bulbasaur',tipo=planta,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10)
+
+
+const charmander = new Truchimon(nombre='charmander',tipo=fuego,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,imagen="verguigneo.png")
+const bulbasaur = new Truchimon(nombre='bulbasaur',tipo=planta,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,imagen="pixil-frame-0.png")
+
 
 const tacle= new Movimiento(danioBase=5,tipo=normal)
 const asado=new Movimiento(danioBase=5,tipo=fuego)
