@@ -1,8 +1,24 @@
 import wollok.game.*
-import pepita.*
+import escenarios.*
+
+object window{
+	method main(){
+		game.title("Truchimón! 👾")
+		game.width(30)
+		game.height(16)
+		game.ground('pasto.png')
+		game.cellSize(50)
+		game.addVisualCharacter(hospital)
+		game.addVisualCharacter(jungla)
+		game.addVisualCharacter(coliseo)
+	}
+	
+	// Agregar methods para los distintos escenarios
+	// cada method va a tener sus propias configs
+}
+
 
 program juego {
-	game.title("Juego Base")
-	game.addVisual(pepita)
-	game.start()
+	window.main()
+	game.start()	
 }
