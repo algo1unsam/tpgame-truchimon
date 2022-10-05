@@ -1,4 +1,5 @@
 import wollok.game.*
+import config.*
 
 object planta{}
 object agua{}
@@ -25,7 +26,7 @@ object entrenador {
 		dir = "R"
 		img += 1
 		x += 1
-		x = x.limitBetween(0,12)
+		x = x.limitBetween(0,config.width() - 1)
 		position = game.at(x,y)	
 	}
 	
@@ -33,7 +34,7 @@ object entrenador {
 		dir = "L"
 		img += 1
 		x -= 1
-		x = x.limitBetween(0,12)
+		x = x.limitBetween(0,config.width() - 1)
 		position = game.at(x,y)	
 	}
 	
@@ -41,7 +42,7 @@ object entrenador {
 		dir = "F"
 		img += 1
 		y -= 1
-		y = y.limitBetween(0,9)
+		y = y.limitBetween(0,config.height() - 1)
 		position = game.at(x,y)	
 	}
 	
@@ -49,7 +50,7 @@ object entrenador {
 		dir = "B"
 		img += 1
 		y += 1
-		y = y.limitBetween(0,9)
+		y = y.limitBetween(0,config.height() - 1)
 		position = game.at(x,y)	
 	}
 //FIN CODIGO DE IMAGEN Y MOVIMIENTO
