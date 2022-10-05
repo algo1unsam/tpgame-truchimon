@@ -1,4 +1,7 @@
 import wollok.game.*
+import eleccionCredo.*
+import juego.*
+import entrenador.*
 import escenarios.*
 
 object window{
@@ -16,9 +19,6 @@ object window{
 	// Agregar methods para los distintos escenarios
 	// cada method va a tener sus propias configs
 }
-
-
-program juego {
-	window.main()
-	game.start()	
+program Truchimon {
+	pantallaInicio.iniciar()
 }
