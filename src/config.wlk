@@ -1,0 +1,4 @@
+object config {
+	
+	
+}

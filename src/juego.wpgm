@@ -6,7 +6,7 @@ object window{
 		game.title("Truchimón! 👾")
 		game.width(30)
 		game.height(16)
-		game.ground('pasto.png')
+		game.ground('pasto_jungla.png')
 		game.cellSize(50)
 		game.addVisualCharacter(hospital)
 		game.addVisualCharacter(jungla)
