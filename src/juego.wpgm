@@ -1,24 +1,8 @@
 import wollok.game.*
-import eleccionCredo.*
-import juego.*
 import entrenador.*
 import escenarios.*
+import config.*
 
-object window{
-	method main(){
-		game.title("Truchimón! 👾")
-		game.width(30)
-		game.height(16)
-		game.ground('pasto_jungla.png')
-		game.cellSize(50)
-		game.addVisualCharacter(hospital)
-		game.addVisualCharacter(jungla)
-		game.addVisualCharacter(coliseo)
-	}
-	
-	// Agregar methods para los distintos escenarios
-	// cada method va a tener sus propias configs
-}
 program Truchimon {
-	pantallaInicio.iniciar()
+	intro.iniciar()
 }
