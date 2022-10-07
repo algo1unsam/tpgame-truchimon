@@ -3,16 +3,49 @@ import wollok.game.*
 class Truchimon{
 	const nombre=null  //o especie
 	const tipo = null //fuego,agua,etc
-	var property salud = saludMaxima //salud actual
 	var saludMaxima = null //max health
+	var property salud = saludMaxima //salud actual
+	
+	var property experiencia = 0
+	
 	var property ataque = null   //aniade danio al movimiento que use
 	var property defensa = null  //resta danio recibido 
 	var property velocidad = null
 	var property ataqueEspecial = null
 	var property defensaEspecial = null
+	var property nivelActual = 1
+	
+	const movimientos = []
+	const movimientosPosibles = []
+	
+	
 	var property position = game.origin()
 	
 	const imagen = null
+	
+	method subeDeNivel(){
+		if(nivelActual<self.nivel() and self.nivel()>3){
+			nivelActual+=1
+			//TODO:Hacer la seleccion del movimiento a olvidar, si se quiere aprender el nuevo
+			self.olvidarUnMovimiento()
+			self.aprenderMovimiento()
+		}
+	}
+	
+	method olvidarUnMovimiento(){
+		//
+	}
+	
+	
+	method aprenderMovimiento(){//Aprende en base al indice del movimiento posible
+		movimientos.add(movimientosPosibles.get(self.nivel()-1))
+	}
+	
+	method nivel(){
+		return (experiencia/100).roundUp()
+	}
+	
+	
 	
 	method image(){
 		return imagen
@@ -46,8 +79,8 @@ class Truchimon{
 		salud=saludMaxima
 	}
 	
-	method estado(){
-		return if(salud>0) "vivo" else "muerto"
+	method murio(){
+		return salud==0
 	}
 	
 }
@@ -55,9 +88,13 @@ class Truchimon{
 class Movimiento {
 	const property tipo=null
 	const danioBase = null
+	const imagen=null
 	method danioEfectivo(truchimon){//dependiendo del tipo de ataque, uso el stat ataque o ataqueEspecial del truchimon
 		return if(tipo==normal) danioBase + truchimon.ataque() else danioBase + truchimon.ataqueEspecial()
 	}
+	
+	method image()=imagen
+	
 }
 
 class Tipo{
@@ -73,20 +110,84 @@ class Tipo{
 	
 	
 }
+
+//Definicion de tipos
 const fuego = new Tipo()
-const agua = new Tipo(resistencias=[fuego])
-const planta = new Tipo(debilidades=[fuego],resistencias=[agua])
+const agua = new Tipo()
+const planta = new Tipo()
 const normal = new Tipo()
+const tierra = new Tipo()
+const metal = new Tipo()
+const viento = new Tipo()
+const hielo = new Tipo()
 
 
-
-const charmander = new Truchimon(nombre='charmander',tipo=fuego,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,imagen="verguigneo.png")
+//Ejemplos de Truchimones, porfa dejemoslos tipo easteregg
+const verguigneo = new Truchimon(nombre='verguigneo',tipo=fuego,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,imagen="Pokebola.jpg")
 const bulbasaur = new Truchimon(nombre='bulbasaur',tipo=planta,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,imagen="pixil-frame-0.png")
+const mikali = new Truchimon(nombre='mikali',tipo=metal,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,imagen="mikali.png")
 
 
+//Truchimones posta, son presets, los personalizamos despues
+const fuego1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,estrellita],/*TODO:Agregar los movimientos posibles*/imagen=null )
+const fuego2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,estrellita],/*TODO:Agregar los movimientos posibles*/imagen=null )
+
+const planta1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,yuyazo],/*TODO:Agregar los movimientos posibles*/imagen=null )
+const planta2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,yuyazo],/*TODO:Agregar los movimientos posibles*/imagen=null )
+
+const agua1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,garzo],/*TODO:Agregar los movimientos posibles*/imagen=null )
+const agua2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,garzo],/*TODO:Agregar los movimientos posibles*/imagen=null )
+
+const tierra1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,barro],/*TODO:Agregar los movimientos posibles*/imagen=null )
+const tierra2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,barro],/*TODO:Agregar los movimientos posibles*/imagen=null )
+
+const metal1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,tramontina],/*TODO:Agregar los movimientos posibles*/imagen=null )
+const metal2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,tramontina],/*TODO:Agregar los movimientos posibles*/imagen=null )
+
+const hielo1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,cubito],/*TODO:Agregar los movimientos posibles*/imagen=null )
+const hielo2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,cubito],/*TODO:Agregar los movimientos posibles*/imagen=null )
+
+const viento1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,pedito],/*TODO:Agregar los movimientos posibles*/imagen=null )
+const viento2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,pedito],/*TODO:Agregar los movimientos posibles*/imagen=null )
+
+const normal1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle],/*TODO:Agregar los movimientos posibles*/imagen=null )
+const normal2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle],/*TODO:Agregar los movimientos posibles*/imagen=null )
+
+
+
+
+//8tipo, 3 x tipo=24
 const tacle= new Movimiento(danioBase=5,tipo=normal)
-const asado=new Movimiento(danioBase=5,tipo=fuego)
+const trompada= new Movimiento(danioBase=10,tipo=normal)
+const laManoDeDios= new Movimiento(danioBase=15,tipo=normal)
 
+const estrellita=new Movimiento(danioBase=5,tipo=fuego)
+const fogon=new Movimiento(danioBase=10,tipo=fuego)
+const asado=new Movimiento(danioBase=15,tipo=fuego)
+
+const garzo = new Movimiento(danioBase=5,tipo=agua)
+const sodazo = new Movimiento(danioBase=10,tipo=agua)
+const catarata = new Movimiento(danioBase=15,tipo=agua)
+
+const yuyazo = new Movimiento(danioBase=5,tipo=planta)
+const fotosintesis = new Movimiento(danioBase=10,tipo=planta)
+const fasito = new Movimiento(danioBase=15,tipo=planta)
+
+const barro = new Movimiento(danioBase=5,tipo=tierra)
+const pozo = new Movimiento(danioBase=10,tipo=tierra)
+const zanja = new Movimiento(danioBase=15,tipo=tierra)
+
+const cubito = new Movimiento(danioBase=5,tipo=hielo)
+const sambayon = new Movimiento(danioBase=10,tipo=hielo)
+const granizo = new Movimiento(danioBase=15,tipo=hielo)
+
+const tramontina = new Movimiento(danioBase=5,tipo=metal)
+const fierrazo = new Movimiento(danioBase=10,tipo=metal)
+const cacerolazo = new Movimiento(danioBase=15,tipo=metal)
+
+const pedito = new Movimiento(danioBase=5,tipo=viento)
+const eructo = new Movimiento(danioBase=10,tipo=viento)
+const bubuzela = new Movimiento(danioBase=15,tipo=viento)
 
 
 

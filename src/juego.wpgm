@@ -9,13 +9,23 @@ object juego{
 		game.height(10)
 		game.cellSize(50)
 		game.ground("pasto.png")
-		fuego.agregarDebilidades([agua])
-		fuego.agregarResistencias([planta])
-		agua.agregarDebilidades([planta])
-		agua.agregarResistencias([fuego])
-		planta.agregarDebilidades([fuego])
-		planta.agregarResistencias([agua])
 		
+		fuego.agregarDebilidades([agua,tierra,viento])
+		fuego.agregarResistencias([planta,metal,hielo])
+		agua.agregarDebilidades([planta,hielo])
+		agua.agregarResistencias([fuego,tierra])
+		planta.agregarDebilidades([fuego,viento,metal,hielo])
+		planta.agregarResistencias([agua,tierra])
+		viento.agregarResistencias([fuego,planta])
+		tierra.agregarDebilidades([agua,planta,metal])
+		tierra.agregarResistencias([viento])
+		metal.agregarDebilidades([fuego,viento])
+		metal.agregarResistencias([planta,tierra,hielo])
+		hielo.agregarDebilidades([fuego,agua,metal])
+		hielo.agregarResistencias([planta])
+		
+		
+				
 		
 		//Podemos crear los pokemones y tipos aca directamente
 		
@@ -37,7 +47,7 @@ object juego{
 
 program juego {
 	juego.configurar()
-	game.addVisualCharacter(charmander)
+	game.addVisualCharacter(mikali)
 	game.start()
 	
 }
