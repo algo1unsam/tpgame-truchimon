@@ -68,8 +68,8 @@ object intro inherits Escenario {
 	override method iniciar() {
 		super()
 		game.ground('pasto.png')
-		game.addVisualIn(backgnd,game.at(0,3))
-		game.addVisualIn(text,game.origin())
+		game.addVisualIn(backgnd,game.origin())
+		game.addVisualIn(text,game.at(7,1))
 		
 		keyboard.num1().onPressDo{
 			config.agregarStarter(planta)
@@ -145,7 +145,7 @@ object junglaModo inherits Escenario {
 }
 
 object backgnd {
-	method image() = "bkgnStarter.jpeg"
+	method image() = "bgStarter.png"
 } 
 
 object text {

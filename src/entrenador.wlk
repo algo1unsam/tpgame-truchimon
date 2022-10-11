@@ -114,16 +114,16 @@ object entrenador {
 	
 	method elegirPokemon(){
 		//Hacer visual de los pokemones en la pokedex
-		keyboard.num0().onPressDo({return pokemones.index(0)})
-		keyboard.num1().onPressDo({return pokemones.index(1)})
-		keyboard.num2().onPressDo({return pokemones.index(2)})
-		keyboard.num3().onPressDo({return pokemones.index(3)})
-		keyboard.num4().onPressDo({return pokemones.index(4)})
-		keyboard.num5().onPressDo({return pokemones.index(5)})
-		keyboard.num6().onPressDo({return pokemones.index(6)})
-		keyboard.num7().onPressDo({return pokemones.index(7)})
-		keyboard.num8().onPressDo({return pokemones.index(8)})
-		keyboard.num9().onPressDo({return pokemones.index(9)})
+		//keyboard.num0().onPressDo({return pokemones.index(0)})
+		//keyboard.num1().onPressDo({return pokemones.index(1)})
+		//keyboard.num2().onPressDo({return pokemones.index(2)})
+		//keyboard.num3().onPressDo({return pokemones.index(3)})
+		//keyboard.num4().onPressDo({return pokemones.index(4)})
+		//keyboard.num5().onPressDo({return pokemones.index(5)})
+		//keyboard.num6().onPressDo({return pokemones.index(6)})
+		//keyboard.num7().onPressDo({return pokemones.index(7)})
+		//keyboard.num8().onPressDo({return pokemones.index(8)})
+		//keyboard.num9().onPressDo({return pokemones.index(9)})
 	}
 }
 
