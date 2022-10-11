@@ -1,5 +1,6 @@
 import wollok.game.*
 import config.*
+import escenarios.*
 
 object planta{}
 object agua{}
@@ -27,7 +28,18 @@ object entrenador {
 		img += 1
 		x += 1
 		x = x.limitBetween(0,config.width() - 1)
-		position = game.at(x,y)	
+		
+		if (config.colisionaEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
+			game.say(self, mensajes.choque())
+			x -= 1
+			x = x.limitBetween(0,config.width() - 1)
+		}
+		
+		if (config.entraAlEscenarioEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
+			game.say(self, mensajes.entrada())
+			junglaModo.iniciar()
+		}
+		position = game.at(x,y)
 	}
 	
 	method moverL(){
@@ -35,7 +47,18 @@ object entrenador {
 		img += 1
 		x -= 1
 		x = x.limitBetween(0,config.width() - 1)
-		position = game.at(x,y)	
+		
+		if (config.colisionaEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
+			game.say(self, mensajes.choque())
+			x += 1
+			x = x.limitBetween(0,config.width() - 1)
+		}
+		
+		if (config.entraAlEscenarioEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
+			game.say(self, mensajes.entrada())
+			junglaModo.iniciar()
+		}
+		position = game.at(x,y)
 	}
 	
 	method moverD(){
@@ -43,7 +66,18 @@ object entrenador {
 		img += 1
 		y -= 1
 		y = y.limitBetween(0,config.height() - 1)
-		position = game.at(x,y)	
+		
+		if (config.colisionaEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
+			game.say(self, mensajes.choque())
+			y += 1
+			y = y.limitBetween(0,config.height() - 1)
+		}
+		
+		if (config.entraAlEscenarioEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
+			game.say(self, mensajes.entrada())
+			junglaModo.iniciar()
+		}
+		position = game.at(x,y)
 	}
 	
 	method moverU(){
@@ -51,7 +85,18 @@ object entrenador {
 		img += 1
 		y += 1
 		y = y.limitBetween(0,config.height() - 1)
-		position = game.at(x,y)	
+		
+		if (config.colisionaEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
+			game.say(self, mensajes.choque())
+			y -= 1
+			y = y.limitBetween(0,config.height() - 1)
+		}
+		
+		if (config.entraAlEscenarioEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
+			game.say(self, mensajes.entrada())
+			junglaModo.iniciar()
+		}
+		position = game.at(x,y)
 	}
 //FIN CODIGO DE IMAGEN Y MOVIMIENTO
 
@@ -80,7 +125,6 @@ object entrenador {
 		keyboard.num8().onPressDo({return pokemones.index(8)})
 		keyboard.num9().onPressDo({return pokemones.index(9)})
 	}
-	
 }
 
 
