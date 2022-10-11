@@ -19,7 +19,7 @@ object entrenador {
 	var property position = game.at(x,y)
 	
 	method image(){
-		return dir+((img%3)+1)+".jpeg"
+		return dir+((img%3)+1)+".png"
 	}
 	
 	method moverR(){
