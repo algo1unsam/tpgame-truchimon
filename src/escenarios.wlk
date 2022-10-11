@@ -1,6 +1,7 @@
 import wollok.game.*
 import config.*
 import entrenador.*
+import jungla.*
 
 class Estructura {}
 
@@ -89,12 +90,14 @@ object principal inherits Escenario {
 	
 	override method iniciar() {
 		super()
-		game.ground('pasto_jungla.png')
+		game.ground('pasto.png')
 		game.addVisual(hospital)
 		game.addVisual(jungla)
 		game.addVisual(coliseo)
 		game.addVisualCharacter(entrenador)
 		self.crearBordes()
+		game.addVisual(new Arbol(index=0,x_pos=0,y_pos=0))
+		game.addVisual(new Arbol(index=0,x_pos=1,y_pos=0))
 		
 		entrenador.starter(config.starter())
 		
