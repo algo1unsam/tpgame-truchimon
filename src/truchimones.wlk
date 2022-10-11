@@ -1,6 +1,7 @@
 import wollok.game.*
 
 class Truchimon{
+	//Definicion de variables
 	const nombre=null  //o especie
 	const tipo = null //fuego,agua,etc
 	var saludMaxima = null //max health
@@ -17,23 +18,46 @@ class Truchimon{
 	
 	const movimientos = []
 	const movimientosPosibles = []
+	var movimientoAOlvidar = null
 	
 	
-	var property position = game.origin()
+	var property position = game.origin() //Ver despues que hacer con la posicion en la jungla
 	
 	const imagen = null
+	method image(){
+		return imagen
+	}
 	
+	
+	//Logica de niveles y aprender movimientos
 	method subeDeNivel(){
-		if(nivelActual<self.nivel() and self.nivel()>3){
+		if(nivelActual<self.nivel()){
 			nivelActual+=1
-			//TODO:Hacer la seleccion del movimiento a olvidar, si se quiere aprender el nuevo
-			self.olvidarUnMovimiento()
-			self.aprenderMovimiento()
+			//Mostrar movimiento posible con movimientosPosibles.get(self.nivel()-1)
+			//Que elija si lo quiere o no
+			if(true){//En caso de que si
+				if(self.noPuedeAprenderMovimiento()){//Si no puede aprender, olvida uno
+					//TODO:Hacer la seleccion del movimiento a olvidar, si se quiere aprender el nuevo
+					self.olvidarUnMovimiento()
+				}
+				self.aprenderMovimiento()
+			}
+			self.aumentoDeStats()
+			
+			
+			
+			
+			
+			
 		}
+			
+					
+		
 	}
 	
 	method olvidarUnMovimiento(){
-		//
+		//TODO: definir el movimiento a olvidar
+		movimientos.remove(movimientoAOlvidar)
 	}
 	
 	
@@ -41,22 +65,35 @@ class Truchimon{
 		movimientos.add(movimientosPosibles.get(self.nivel()-1))
 	}
 	
-	method nivel(){
-		return (experiencia/100).roundUp()
+	method nivel(){//arrancan con nivel 1, hasta maximo 5!!
+		return 5.max((experiencia/100).roundUp())
+	}
+	
+	method noPuedeAprenderMovimiento(){//Puede tener hasta 4 movimientos
+		return movimientos.size()==4
+	}
+	
+	method aumentoDeStats(){
+		//TODO: que tanto aumentan, si todos igual o no. Lo ideal seria que dependa del tipo del truchimon
 	}
 	
 	
 	
-	method image(){
-		return imagen
-	}
-
+	
+	//Dinamicas ataques
 	method atacar(truchimon,movimiento){ //Al atacar a otro truchimon hago que ejecute su metodo recibirAtaque
 		truchimon.recibirAtaque(movimiento,self)
+		if(tipo==planta){
+			self.curarse(truchimon,movimiento)
+		}
 	}
 	
 	method recibirAtaque(movimiento,atacante){//Reduce la salud en base al danio generado por el ataque multiplicado por el factor de tipos
-		salud = 0.max(salud-movimiento.danioEfectivo(atacante)*self.factorDeTipos(movimiento)+self.factorDeDefensa(movimiento))
+		salud = 0.max(salud - self.danioRecibido(movimiento,atacante))
+	}
+	
+	method danioRecibido(movimiento,atacante){
+		return movimiento.danioEfectivo(atacante)*self.factorDeTipos(movimiento)-self.factorDeDefensa(movimiento)
 	}
 	
 	method factorDeTipos(mov){ //Si soy resistente, el danio del ataque se reduce a la mitad, si soy debil es el doble y si no es ninguno, va directo.
@@ -75,11 +112,15 @@ class Truchimon{
 		return if(mov.tipo()==normal) defensa else defensaEspecial
 	}
 	
+	method curarse(truchimon,movimiento){
+		salud = saludMaxima.max(truchimon.danioRecibido(movimiento,self)/2)
+	}
+	
 	method revivir(){
 		salud=saludMaxima
 	}
 	
-	method murio(){
+	method murio(){//Siento que conviene para armar las batallas
 		return salud==0
 	}
 	
@@ -93,7 +134,7 @@ class Movimiento {
 		return if(tipo==normal) danioBase + truchimon.ataque() else danioBase + truchimon.ataqueEspecial()
 	}
 	
-	method image()=imagen
+	method image()=imagen //Para poder mostrar los ataques que uno tiene, wollok no tiene buen texto 
 	
 }
 
