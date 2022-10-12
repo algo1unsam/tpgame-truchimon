@@ -124,10 +124,11 @@ object principal inherits Escenario {
 }
 
 object junglaModo inherits Escenario {
+	const property truchimones = []
+	
 	override method iniciar() {
-		config.cambiarEscenario(self)
+		config.cambiarEscenario(mensajes.junglaName())
 		super()
-		game.ground('pasto_jungla.png')
 		game.addVisualCharacter(entrenador)
 		self.crearBordes()
 		
@@ -141,6 +142,10 @@ object junglaModo inherits Escenario {
 	
 	override method crearBordes() {
 		// TODO: Crear salida
+	}
+	
+	method generarTruchimones() {
+		
 	}
 }
 

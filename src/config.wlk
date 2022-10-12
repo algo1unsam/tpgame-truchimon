@@ -1,4 +1,5 @@
 import escenarios.*
+import truchimones.*
 import wollok.game.*
 
 object config {
@@ -44,6 +45,18 @@ object config {
 	
 	method cambiarEscenario(escenario) {
 		escenarioActual = escenario
+	}
+}
+
+object truchimones {
+	const property listado = [
+		fuego1, fuego2, planta1, planta2, agua1, agua2,
+		tierra1, tierra2, metal1, metal2, hielo1,
+		hielo2, viento1, viento2, normal1, normal2
+	]
+	
+	method obtenerTruchimonesRandom(cantidad) {
+		
 	}
 }
 
