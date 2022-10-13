@@ -2,6 +2,84 @@ import wollok.game.*
 import truchimones.*
 import entrenador.*
 
+object fondobatalla{
+	method image() = 'battle.png'
+	method position() = game.origin()
+}
+
+object cuadroDialogo {
+	method image() = 'emptyframe.png'
+	method position() = game.at(5,0)
+}
+
+object linea1{
+	method image() = 'vacio.png'
+	method position() = game.at(9,2)
+	method text() = '
+Bienvenido a la Batalla!!! Elige tu pokemon...'
+}
+
+object opcion1{
+	method image() = 'vacio.png'
+	method position() = game.at(6,1)
+	method text() = '
+1 - '//+entrenador.pokemones.get(0)
+}
+object opcion2{
+	method image() = 'vacio.png'
+	method position() = game.at(9,1)
+	method text() = '
+2 - '//+entrenador.pokemones.get(1)
+}
+object opcion3{
+	method image() = 'vacio.png'
+	method position() = game.at(12,1)
+	method text() = '
+3 - '//+entrenador.pokemones.get(2)
+}
+object opcion4{
+	method image() = 'vacio.png'
+	method position() = game.at(15,1)
+	method text() = '
+4 - '//+entrenador.pokemones.get(3)
+}
+
+object stats{
+	method image() = 'stats.png'
+}
+object stats2{
+	method image() = 'stats.png'
+}
+
+object i1{
+	method image() = 'heart.png'
+}
+object i2{
+	method image() = 'heart.png'
+}
+object i3{
+	method image() = 'heart.png'
+}
+object i4{
+	method image() = 'heart.png'
+}
+
+object d1{
+	method image() = 'heart.png'
+}
+object d2{
+	method image() = 'heart.png'
+}
+object d3{
+	method image() = 'heart.png'
+}
+object d4{
+	method image() = 'heart.png'
+}
+
+object half{
+	method image() = 'half.png'
+}
 
 object batalla {
 	var property estatus = 5
@@ -11,6 +89,28 @@ object batalla {
 	var property tr1= entrenador.truchimonElegido() //Cuando pase la pelea, vamos a setarlos en base a lo que decidamos
 	var property tr2=bulbasaur
 	method iniciar(){
+
+		game.width(24)
+		game.height(14)
+		game.addVisual(fondobatalla)
+		game.addVisual(cuadroDialogo)
+		game.addVisual(linea1)
+		game.addVisual(opcion1)
+		game.addVisual(opcion2)
+		game.addVisual(opcion3)
+		game.addVisual(opcion4)
+		
+		game.addVisualIn(stats,game.at(0,12))
+		game.addVisualIn(stats2,game.at(18,12))
+		game.addVisualIn(i1,game.at(2,13))
+		game.addVisualIn(i2,game.at(3,13))
+		game.addVisualIn(i3,game.at(4,13))
+		game.addVisualIn(i4,game.at(5,13))
+		
+		game.addVisualIn(d1,game.at(20,13))
+		game.addVisualIn(d2,game.at(21,13))
+		game.addVisualIn(d3,game.at(22,13))
+		game.addVisualIn(d4,game.at(23,13))
 		
 		keyboard.enter().onPressDo({self.pelea(verguigneo,bulbasaur)})
 		keyboard.num1().onPressDo{self.nuestroTurno(tr1,tr2,0)}
