@@ -2,10 +2,6 @@ import wollok.game.*
 import config.*
 import escenarios.*
 
-object planta{}
-object agua{}
-object fuego{}
-
 object entrenador {
 	var property pokemones = []
 	var property capacidadPokedex = 10
@@ -110,6 +106,10 @@ object entrenador {
 	
 	method batallar(){
 		
+	}
+
+	method truchimonElegido(){
+		return verguigneo
 	}
 	
 	method elegirPokemon(){

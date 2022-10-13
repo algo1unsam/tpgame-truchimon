@@ -2,7 +2,7 @@ import wollok.game.*
 
 class Truchimon{
 	//Definicion de variables
-	const nombre=null  //o especie
+	const property nombre=null  //o especie
 	const tipo = null //fuego,agua,etc
 	var saludMaxima = null //max health
 	var property salud = saludMaxima //salud actual
@@ -16,7 +16,7 @@ class Truchimon{
 	var property defensaEspecial = null
 	var property nivelActual = 1
 	
-	const movimientos = []
+	const property movimientos = []
 	const movimientosPosibles = []
 	var movimientoAOlvidar = null
 	
@@ -83,7 +83,7 @@ class Truchimon{
 	//Dinamicas ataques
 	method atacar(truchimon,movimiento){ //Al atacar a otro truchimon hago que ejecute su metodo recibirAtaque
 		truchimon.recibirAtaque(movimiento,self)
-		if(tipo==planta){
+		if(tipo==planta and movimiento.tipo()==planta){//CAMBIAR, NO DEPENDER DE INSANCIACION!!!!!!
 			self.curarse(truchimon,movimiento)
 		}
 	}
@@ -97,19 +97,12 @@ class Truchimon{
 	}
 	
 	method factorDeTipos(mov){ //Si soy resistente, el danio del ataque se reduce a la mitad, si soy debil es el doble y si no es ninguno, va directo.
-		return if (self.soyResistente(mov)) 1/2 else if(self.soyDebil(mov)) 2 else 1
-	}
-	
-	method soyResistente(mov){
-		return tipo.resistencias().contains(mov.tipo())
-	}
-	
-	method soyDebil(mov){
-		return tipo.debilidades().contains(mov.tipo())
+		return if (tipo.soyResistenteA(mov)) 1/2 else if(tipo.soyDebilA(mov)) 2 else 1
 	}
 	
 	method factorDeDefensa(mov){//Determina si uso defensa o defensaEspecial
-		return if(mov.tipo()==normal) defensa else defensaEspecial
+		//return if(mov.tipo()==normal) defensa else defensaEspecial
+		return mov.tipo().factorDeDefensa(self)
 	}
 	
 	method curarse(truchimon,movimiento){
@@ -127,11 +120,12 @@ class Truchimon{
 }
 
 class Movimiento {
+	const property nombre = null
 	const property tipo=null
 	const danioBase = null
 	const imagen=null
 	method danioEfectivo(truchimon){//dependiendo del tipo de ataque, uso el stat ataque o ataqueEspecial del truchimon
-		return if(tipo==normal) danioBase + truchimon.ataque() else danioBase + truchimon.ataqueEspecial()
+		return danioBase + tipo.factorDeAtaque(truchimon)
 	}
 	
 	method image()=imagen //Para poder mostrar los ataques que uno tiene, wollok no tiene buen texto 
@@ -148,15 +142,37 @@ class Tipo{
 	method agregarResistencias(lista){
 		resistencias.addAll(lista)
 	}
+	method factorDeDefensa(defensor){
+		return defensor.defensaEspecial()
+	}
 	
+	method factorDeAtaque(atacante){
+		return atacante.ataqueEspecial()
+	}
 	
+	method soyResistenteA(mov){
+		return resistencias.contains(mov.tipo())
+	}
+	method soyDebilA(mov){
+		return debilidades.contains(mov.tipo())
+	}
 }
+
+object normal inherits Tipo{
+	override method factorDeDefensa(defensor){
+		return defensor.defensa()
+	}
+	override method factorDeAtaque(atacante){
+		return atacante.ataque()
+	}
+}
+
 
 //Definicion de tipos
 const fuego = new Tipo()
 const agua = new Tipo()
 const planta = new Tipo()
-const normal = new Tipo()
+//const normal = new Tipo()
 const tierra = new Tipo()
 const metal = new Tipo()
 const viento = new Tipo()
@@ -164,8 +180,8 @@ const hielo = new Tipo()
 
 
 //Ejemplos de Truchimones, porfa dejemoslos tipo easteregg
-const verguigneo = new Truchimon(nombre='verguigneo',tipo=fuego,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,imagen="Pokebola.jpg")
-const bulbasaur = new Truchimon(nombre='bulbasaur',tipo=planta,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,imagen="pixil-frame-0.png")
+const verguigneo = new Truchimon(nombre='verguigneo',tipo=fuego,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,movimientos=[tacle,estrellita,trompada,fogon],imagen="Pokebola.jpg")
+const bulbasaur = new Truchimon(nombre='bulbasaur',tipo=planta,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,movimientos=[tacle,yuyazo,trompada,fotosintesis],imagen="pixil-frame-0.png")
 const mikali = new Truchimon(nombre='mikali',tipo=metal,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,imagen="mikali.png")
 
 
@@ -198,13 +214,13 @@ const normal2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TO
 
 
 //8tipo, 3 x tipo=24
-const tacle= new Movimiento(danioBase=5,tipo=normal)
-const trompada= new Movimiento(danioBase=10,tipo=normal)
-const laManoDeDios= new Movimiento(danioBase=15,tipo=normal)
+const tacle= new Movimiento(nombre="tacle",danioBase=5,tipo=normal)
+const trompada= new Movimiento(nombre="trompada",danioBase=10,tipo=normal)
+const laManoDeDios= new Movimiento(nombre='laManoDeDios',danioBase=15,tipo=normal)
 
-const estrellita=new Movimiento(danioBase=5,tipo=fuego)
-const fogon=new Movimiento(danioBase=10,tipo=fuego)
-const asado=new Movimiento(danioBase=15,tipo=fuego)
+const estrellita=new Movimiento(nombre='estrellita',danioBase=5,tipo=fuego)
+const fogon=new Movimiento(nombre='fogon',danioBase=10,tipo=fuego)
+const asado=new Movimiento(nombre='asado',danioBase=15,tipo=fuego)
 
 const garzo = new Movimiento(danioBase=5,tipo=agua)
 const sodazo = new Movimiento(danioBase=10,tipo=agua)
@@ -229,9 +245,3 @@ const cacerolazo = new Movimiento(danioBase=15,tipo=metal)
 const pedito = new Movimiento(danioBase=5,tipo=viento)
 const eructo = new Movimiento(danioBase=10,tipo=viento)
 const bubuzela = new Movimiento(danioBase=15,tipo=viento)
-
-
-
-
-
-
