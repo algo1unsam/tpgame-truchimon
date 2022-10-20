@@ -43,12 +43,14 @@ object coliseo inherits Estructura {
 	method image() = "jungla.png" // TODO: cambiar visual
 }
 
+// TODO: Eliminarlo
 class BloqueDummy {
 	var property position
 
 	method image() = "dummy.png"
 }
 
+// TODO: Eliminarlo
 class BloqueEntrada {
 	var property position
 
@@ -125,7 +127,9 @@ object principal inherits Escenario {
 }
 
 object junglaModo inherits Escenario {
-	const property truchimones = []
+	const property truchimones_select = [verguigneo, bulbasaur, mikali]
+	const x_coord = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+	const y_coord = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 	
 	override method iniciar() {
 		config.cambiarEscenario(mensajes.junglaName())
@@ -139,14 +143,25 @@ object junglaModo inherits Escenario {
 		keyboard.left().onPressDo{entrenador.moverL()}
 		keyboard.up().onPressDo{entrenador.moverU()}
 		keyboard.down().onPressDo{entrenador.moverD()}
+		
+		self.generarTruchimones()
 	}
 	
 	override method crearBordes() {
 		// TODO: Crear salida
 	}
 	
-	method generarTruchimones() {
+	method ubicarTruchimon() {
+		const x = x_coord.anyOne()
+		x_coord.remove(x)
+		const y = y_coord.anyOne()
+		y_coord.remove(y)
 		
+		game.addVisual(new BloqueDummy(position = game.at(x, y)))
+	}
+	
+	method generarTruchimones() {
+		5.times({ i => self.ubicarTruchimon() })
 	}
 }
 

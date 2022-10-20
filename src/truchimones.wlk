@@ -28,6 +28,10 @@ class Truchimon{
 		return imagen
 	}
 	
+	method relocate(_position) {
+		position = _position
+	}
+	
 	
 	//Logica de niveles y aprender movimientos
 	method subeDeNivel(){
