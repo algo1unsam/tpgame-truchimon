@@ -86,8 +86,8 @@ object batalla {
 	var turno = 0
 	var indice = 0
 	var mov = null
-	var property tr1= entrenador.truchimonElegido() //Cuando pase la pelea, vamos a setarlos en base a lo que decidamos
-	var property tr2=bulbasaur
+	var property tr1= verguigneo //entrenador.truchimonElegido() //Cuando pase la pelea, vamos a setarlos en base a lo que decidamos
+	var property tr2= bulbasaur
 	method iniciar(){
 
 		game.width(24)
@@ -111,6 +111,8 @@ object batalla {
 		game.addVisualIn(d2,game.at(21,13))
 		game.addVisualIn(d3,game.at(22,13))
 		game.addVisualIn(d4,game.at(23,13))
+		
+		settingDeTipos.ejecutar()
 		
 		keyboard.enter().onPressDo({self.pelea(verguigneo,bulbasaur)})
 		keyboard.num1().onPressDo{self.nuestroTurno(tr1,tr2,0)}
@@ -141,7 +143,7 @@ object batalla {
 	}
 	
 	method nuestroTurno(t1,t2,indecs){
-		console.println('Nuestro turno')
+		//console.println('Nuestro turno')
 		mov= t1.movimientos().get(indecs)
 		turno+=1
 		console.println('Elegimos '+mov.nombre())
@@ -158,12 +160,16 @@ object batalla {
 	}
 	
 	method turnoPc(t2,t1){
-		mov=tacle
+		mov=t2.movimientos().anyOne()
 		turno+=1
 		
 		console.println('Turno de '+t2.nombre())
 		
+		console.println('Eligio '+mov.nombre())
+		
+		console.println('La vida de '+t1.nombre()+' es de '+t1.salud().toString())
 		t2.atacar(t1,mov)
+		console.println('La vida de '+t1.nombre()+' es de '+t1.salud().toString())
 		
 		if(not t1.murio()){
 			self.pelea(t1,t2)

@@ -43,12 +43,6 @@ class Truchimon{
 				self.aprenderMovimiento()
 			}
 			self.aumentoDeStats()
-			
-			
-			
-			
-			
-			
 		}
 			
 					
@@ -83,9 +77,13 @@ class Truchimon{
 	//Dinamicas ataques
 	method atacar(truchimon,movimiento){ //Al atacar a otro truchimon hago que ejecute su metodo recibirAtaque
 		truchimon.recibirAtaque(movimiento,self)
-		if(tipo==planta and movimiento.tipo()==planta){//CAMBIAR, NO DEPENDER DE INSANCIACION!!!!!!
+		
+		if(tipo.esPlanta() and movimiento.esTipoPlanta()){
 			self.curarse(truchimon,movimiento)
 		}
+		
+		
+		
 	}
 	
 	method recibirAtaque(movimiento,atacante){//Reduce la salud en base al danio generado por el ataque multiplicado por el factor de tipos
@@ -93,7 +91,7 @@ class Truchimon{
 	}
 	
 	method danioRecibido(movimiento,atacante){
-		return movimiento.danioEfectivo(atacante)*self.factorDeTipos(movimiento)-self.factorDeDefensa(movimiento)
+		return movimiento.danioEfectivo(atacante)*self.factorDeTipos(movimiento)//-self.factorDeDefensa(movimiento)
 	}
 	
 	method factorDeTipos(mov){ //Si soy resistente, el danio del ataque se reduce a la mitad, si soy debil es el doble y si no es ninguno, va directo.
@@ -106,7 +104,7 @@ class Truchimon{
 	}
 	
 	method curarse(truchimon,movimiento){
-		salud = saludMaxima.max(truchimon.danioRecibido(movimiento,self)/2)
+		salud = saludMaxima.min(salud + truchimon.danioRecibido(movimiento,self)/2)
 	}
 	
 	method revivir(){
@@ -130,6 +128,12 @@ class Movimiento {
 	
 	method image()=imagen //Para poder mostrar los ataques que uno tiene, wollok no tiene buen texto 
 	
+	method esTipoPlanta() = false
+	
+}
+
+class MovimientoPlanta inherits Movimiento{
+	override method esTipoPlanta() = true
 }
 
 class Tipo{
@@ -156,6 +160,11 @@ class Tipo{
 	method soyDebilA(mov){
 		return debilidades.contains(mov.tipo())
 	}
+	
+	method esPlanta(){
+		return false
+	}
+	
 }
 
 object normal inherits Tipo{
@@ -168,15 +177,46 @@ object normal inherits Tipo{
 }
 
 
+object planta inherits Tipo{
+	
+	override method esPlanta(){
+		return true
+	}
+	
+}
+
+
 //Definicion de tipos
 const fuego = new Tipo()
 const agua = new Tipo()
-const planta = new Tipo()
+//const planta = new Tipo()
 //const normal = new Tipo()
 const tierra = new Tipo()
 const metal = new Tipo()
 const viento = new Tipo()
 const hielo = new Tipo()
+
+object settingDeTipos{
+	method ejecutar(){
+		fuego.agregarDebilidades([agua,tierra,viento])
+		fuego.agregarResistencias([planta,metal,hielo])
+		agua.agregarDebilidades([planta,hielo])
+		agua.agregarResistencias([fuego,tierra])
+		planta.agregarDebilidades([fuego,viento,metal,hielo])
+		planta.agregarResistencias([agua,tierra])
+		viento.agregarResistencias([fuego,planta])
+		tierra.agregarDebilidades([agua,planta,metal])
+		tierra.agregarResistencias([viento])
+		metal.agregarDebilidades([fuego,viento])
+		metal.agregarResistencias([planta,tierra,hielo])
+		hielo.agregarDebilidades([fuego,agua,metal])
+		hielo.agregarResistencias([planta])
+		
+		
+		
+	}
+	
+}
 
 
 //Ejemplos de Truchimones, porfa dejemoslos tipo easteregg
@@ -186,7 +226,7 @@ const mikali = new Truchimon(nombre='mikali',tipo=metal,saludMaxima=20,ataque=10
 
 
 //Truchimones posta, son presets, los personalizamos despues
-const fuego1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,estrellita],/*TODO:Agregar los movimientos posibles*/imagen=null )
+const fuego1 = new Truchimon(nombre = 'drakeon',tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,estrellita],/*TODO:Agregar los movimientos posibles*/imagen=null )
 const fuego2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,estrellita],/*TODO:Agregar los movimientos posibles*/imagen=null )
 
 const planta1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,yuyazo],/*TODO:Agregar los movimientos posibles*/imagen=null )
@@ -222,26 +262,32 @@ const estrellita=new Movimiento(nombre='estrellita',danioBase=5,tipo=fuego)
 const fogon=new Movimiento(nombre='fogon',danioBase=10,tipo=fuego)
 const asado=new Movimiento(nombre='asado',danioBase=15,tipo=fuego)
 
-const garzo = new Movimiento(danioBase=5,tipo=agua)
-const sodazo = new Movimiento(danioBase=10,tipo=agua)
-const catarata = new Movimiento(danioBase=15,tipo=agua)
+const garzo = new Movimiento(nombre='garzo',danioBase=5,tipo=agua)
+const sodazo = new Movimiento(nombre='sodazo',danioBase=10,tipo=agua)
+const catarata = new Movimiento(nombre='catarata',danioBase=15,tipo=agua)
 
-const yuyazo = new Movimiento(danioBase=5,tipo=planta)
-const fotosintesis = new Movimiento(danioBase=10,tipo=planta)
-const fasito = new Movimiento(danioBase=15,tipo=planta)
+const yuyazo = new Movimiento(nombre = 'yuyazo',danioBase=5,tipo=planta)
+const fotosintesis = new Movimiento(nombre='fotosintesis',danioBase=10,tipo=planta)
+const fasito = new Movimiento(nombre='fasito',danioBase=15,tipo=planta)
 
-const barro = new Movimiento(danioBase=5,tipo=tierra)
-const pozo = new Movimiento(danioBase=10,tipo=tierra)
-const zanja = new Movimiento(danioBase=15,tipo=tierra)
+const barro = new Movimiento(nombre='barro',danioBase=5,tipo=tierra)
+const pozo = new Movimiento(nombre='pozo',danioBase=10,tipo=tierra)
+const zanja = new Movimiento(nombre='zanja',danioBase=15,tipo=tierra)
 
-const cubito = new Movimiento(danioBase=5,tipo=hielo)
-const sambayon = new Movimiento(danioBase=10,tipo=hielo)
-const granizo = new Movimiento(danioBase=15,tipo=hielo)
+const cubito = new Movimiento(nombre='cubito',danioBase=5,tipo=hielo)
+const sambayon = new Movimiento(nombre='sambayon',danioBase=10,tipo=hielo)
+const granizo = new Movimiento(nombre='granizo',danioBase=15,tipo=hielo)
 
-const tramontina = new Movimiento(danioBase=5,tipo=metal)
-const fierrazo = new Movimiento(danioBase=10,tipo=metal)
-const cacerolazo = new Movimiento(danioBase=15,tipo=metal)
+const tramontina = new Movimiento(nombre='tramontina',danioBase=5,tipo=metal)
+const fierrazo = new Movimiento(nombre='fierrazo',danioBase=10,tipo=metal)
+const cacerolazo = new Movimiento(nombre='cacerolazo',danioBase=15,tipo=metal)
 
-const pedito = new Movimiento(danioBase=5,tipo=viento)
-const eructo = new Movimiento(danioBase=10,tipo=viento)
-const bubuzela = new Movimiento(danioBase=15,tipo=viento)
+const pedito = new Movimiento(nombre='pedito',danioBase=5,tipo=viento)
+const eructo = new Movimiento(nombre='eructo',danioBase=10,tipo=viento)
+const bubuzela = new Movimiento(nombre='bubuzela',danioBase=15,tipo=viento)
+
+
+
+
+
+
