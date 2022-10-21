@@ -86,9 +86,9 @@ object batalla {
 	var turno = 0
 	var indice = 0
 	var mov = null
-	var property tr1= verguigneo //entrenador.truchimonElegido() //Cuando pase la pelea, vamos a setarlos en base a lo que decidamos
-	var property tr2= bulbasaur
-	method iniciar(){
+	//var property tr1= verguigneo //entrenador.truchimonElegido() //Cuando pase la pelea, vamos a setarlos en base a lo que decidamos
+	//var property tr2= bulbasaur
+	method iniciar(tr1,tr2){
 
 		game.width(24)
 		game.height(14)
@@ -112,18 +112,21 @@ object batalla {
 		game.addVisualIn(d3,game.at(22,13))
 		game.addVisualIn(d4,game.at(23,13))
 		
-		settingDeTipos.ejecutar()
 		
-		keyboard.enter().onPressDo({self.pelea(verguigneo,bulbasaur)})
+		//Poner opcion de querer luchar. Con otro onPressDo
+		keyboard.enter().onPressDo({self.pelea(tr1,tr2)})
 		keyboard.num1().onPressDo{self.nuestroTurno(tr1,tr2,0)}
 		keyboard.num2().onPressDo{self.nuestroTurno(tr1,tr2,1)}
 		keyboard.num3().onPressDo{self.nuestroTurno(tr1,tr2,2)}
 		keyboard.num4().onPressDo{self.nuestroTurno(tr1,tr2,3)}
 		game.start()
 		
+		
+		
+		
 	}
 	
-	method pelea(t1,t2){
+	method pelea(tr1,tr2){
 		
 		if(turno%2==0){//Nuestro turno
 			//Mostrar los ataques
@@ -139,6 +142,8 @@ object batalla {
 	}
 	method finBatalla(ganador){
 		console.println('Fin Batalla, gano '+ganador.nombre()+'!!!')
+		ganador.ganarXP()
+		ganador.subeDeNivel()
 		//jungla.iniciar() o coliseo, volver a donde estemos.
 	}
 	
