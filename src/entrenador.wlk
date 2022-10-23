@@ -1,8 +1,23 @@
 import wollok.game.*
 import config.*
 import escenarios.*
+import truchimones.*
 
-object entrenador {
+class Estados{
+	method anguloPoke()
+}
+
+object salvaje inherits Estados{
+	override method anguloPoke() = 'f'
+}
+
+object enemigo inherits Estados{
+	var property pokemones = []
+	
+	override method anguloPoke() = 'l'
+}
+
+object entrenador inherits Estados{
 	var property pokemones = []
 	var property capacidadPokedex = 10
 	var property pokeballs = 10
@@ -11,9 +26,11 @@ object entrenador {
 //CODIGO DE IMAGEN Y MOVIMIENTO
 	var img = 1
 	var dir = "F"
-	var y = 1
-	var x = 5
+	var y = 0
+	var x = 2
 	var property position = game.at(x,y)
+	
+	override method anguloPoke() = 'r'
 	
 	method image(){
 		return dir+((img%3)+1)+".png"
@@ -26,13 +43,13 @@ object entrenador {
 		x = x.limitBetween(0,config.width() - 1)
 		
 		if (config.colisionaEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
-			game.say(self, mensajes.choque())
+			//game.say(self, mensajes.choque())
 			x -= 1
 			x = x.limitBetween(0,config.width() - 1)
 		}
 		
 		if (config.entraAlEscenarioEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
-			game.say(self, mensajes.entrada())
+			//game.say(self, mensajes.entrada())
 			junglaModo.iniciar()
 		}
 		position = game.at(x,y)
@@ -109,7 +126,8 @@ object entrenador {
 	}
 
 	method truchimonElegido(){
-		return verguigneo
+		const num = 0.randomUpTo(pokemones.size()-1)
+		return pokemones.get(num)
 	}
 	
 	method elegirPokemon(){

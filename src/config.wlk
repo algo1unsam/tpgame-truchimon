@@ -6,8 +6,8 @@ object config {
 	// var property escenarioActual = intro // intro, main, jungla, hospital o batalla	
 	var property starter = null
 	const property width = 24
-	const property height = 12
-	const property colisionables = [jungla, hospital, coliseo]
+	const property height = 14
+	const property colisionables = [jungla, hospital, coliseo, casarandom, bosque, lago]
 	var property escenarioActual = mensajes.introName()
 	
 	method run() {
@@ -30,16 +30,16 @@ object config {
 		.flatMap{
 			colisionable => colisionable.bloques()
 		}.any{
-			punto => game.at(punto.get(0), punto.get(1)) == proximaPosicion
+			punto => punto == proximaPosicion
 		}
 	}
 	
 	method entraAlEscenarioEn(proximaPosicion) {
 		return colisionables
-		.flatMap{
+		.map{
 			colisionable => colisionable.entrada()
 		}.any{
-			punto => game.at(punto.get(0), punto.get(1)) == proximaPosicion
+			punto => punto == proximaPosicion
 		}
 	}
 	
@@ -62,7 +62,7 @@ object truchimones {
 
 
 object mensajes {
-	const property choque = "No es por aca maestro"
+	const property choque = ""
 	const property entrada = "Entrandoooooo"
 	const property junglaName = "Jungla"
 	const property hospitalName = "Hospital"
