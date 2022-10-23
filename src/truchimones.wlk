@@ -3,7 +3,7 @@ import entrenador.*
 
 class Truchimon{
 	//Definicion de variables
-	const property nombre=null  //o especie
+	var property nombre  //o especie
 	const tipo = null //fuego,agua,etc
 	var saludMaxima = null //max health
 	var property salud = saludMaxima //salud actual
@@ -24,6 +24,7 @@ class Truchimon{
 	method image(){
 		return imagen
 	}
+	
 	
 	
 	//Logica de niveles y aprender movimientos
@@ -252,30 +253,31 @@ const mikali = new Truchimon(nombre='mikali',tipo=metal,saludMaxima=20,ataque=10
 //Ataque especial base = 4
 
 
-const fuego1 = new Truchimon(nombre = 'drakeon',tipo=fuego,saludMaxima=20,ataque=3,ataqueEspecial=5,movimientos=[tacle,estrellita],movimientosPosibles=[trompada,fogon,laManoDeDios,asado],imagen=null )//truchi01
-const fuego2 = new Truchimon(nombre='flamepony',tipo=fuego,saludMaxima=20,ataque=4,ataqueEspecial=5,movimientos=[tacle,estrellita],movimientosPosibles=[trompada,fogon,laManoDeDios,asado],imagen=null )//truchi15
+class Charmilion inherits Truchimon(nombre = 'charmilion',tipo=fuego,saludMaxima=20,ataque=3,ataqueEspecial=5,movimientos=[tacle,estrellita],movimientosPosibles=[trompada,fogon,laManoDeDios,asado],imagen=null ){}//truchi01
+class Ponita inherits Truchimon(nombre='ponita',tipo=fuego,saludMaxima=20,ataque=4,ataqueEspecial=5,movimientos=[tacle,estrellita],movimientosPosibles=[trompada,fogon,laManoDeDios,asado],imagen=null ){}//truchi15
 
-const planta1 = new Truchimon(nombre='leafiny',tipo=planta,saludMaxima=20,ataque=4,ataqueEspecial=3,movimientos=[tacle,matecito],movimientosPosibles=[trompada,fotosintesis,laManoDeDios,pachamama],imagen=null )//truchi03
-const planta2 = new Truchimon(nombre='wormlord',tipo=planta,saludMaxima=30,ataque=3,ataqueEspecial=1,movimientos=[tacle,matecito],movimientosPosibles=[trompada,fotosintesis,laManoDeDios,pachamama],imagen=null )//truchi07
-const planta3 =new Truchimon(nombre='mongreen',tipo=planta,saludMaxima=20,ataque=4,ataqueEspecial=2,movimientos=[tacle,matecito],movimientosPosibles=[trompada,fotosintesis,laManoDeDios,pachamama],imagen=null )//truchi11
+class Lifeon inherits Truchimon(nombre='lifeon',tipo=planta,saludMaxima=20,ataque=4,ataqueEspecial=3,movimientos=[tacle,matecito],movimientosPosibles=[trompada,fotosintesis,laManoDeDios,pachamama],imagen=null){}//truchi03
+class Medestapod inherits Truchimon(nombre='medestapod',tipo=planta,saludMaxima=30,ataque=3,ataqueEspecial=1,movimientos=[tacle,matecito],movimientosPosibles=[trompada,fotosintesis,laManoDeDios,pachamama],imagen=null){}//truchi07
+class Grukey inherits Truchimon(nombre='grukey',tipo=planta,saludMaxima=20,ataque=4,ataqueEspecial=2,movimientos=[tacle,matecito],movimientosPosibles=[trompada,fotosintesis,laManoDeDios,pachamama],imagen=null){}//truchi11
 
-const agua1 = new Truchimon(nombre='surfyan',tipo=agua,saludMaxima=20,ataque=4,ataqueEspecial=4,movimientos=[tacle,escupitajo],movimientosPosibles=[trompada,sodazo,laManoDeDios,catarata],imagen=null )//truchi09
-const agua2 = new Truchimon(nombre='mardel',tipo=agua,saludMaxima=20,ataque=4,ataqueEspecial=4,movimientos=[tacle,escupitajo],movimientosPosibles=[trompada,sodazo,laManoDeDios,catarata],imagen=null )//truchi16
+class Jorsi inherits Truchimon(nombre='jorsi',tipo=agua,saludMaxima=20,ataque=4,ataqueEspecial=4,movimientos=[tacle,escupitajo],movimientosPosibles=[trompada,sodazo,laManoDeDios,catarata],imagen=null){}//truchi09
+class Sil inherits Truchimon(nombre='sil',tipo=agua,saludMaxima=20,ataque=4,ataqueEspecial=4,movimientos=[tacle,escupitajo],movimientosPosibles=[trompada,sodazo,laManoDeDios,catarata],imagen=null){}//truchi16
 
-const tierra1 = new Truchimon(nombre='rockball',tipo=tierra,saludMaxima=30,ataque=3,ataqueEspecial=4,movimientos=[tacle,barro],movimientosPosibles=[trompada,pozo,laManoDeDios,zanja],imagen=null )//truchi19
-const tierra2 = new Truchimon(nombre='mudtail',tipo=tierra,saludMaxima=35,ataque=3,ataqueEspecial=3,movimientos=[tacle,barro],movimientosPosibles=[trompada,pozo,laManoDeDios,zanja],imagen=null )//truchi02
+class Jeodud inherits Truchimon(nombre='jeodud',tipo=tierra,saludMaxima=30,ataque=3,ataqueEspecial=4,movimientos=[tacle,barro],movimientosPosibles=[trompada,pozo,laManoDeDios,zanja],imagen=null){}//truchi19
+class Umbrion inherits Truchimon(nombre='umbrion',tipo=tierra,saludMaxima=35,ataque=3,ataqueEspecial=3,movimientos=[tacle,barro],movimientosPosibles=[trompada,pozo,laManoDeDios,zanja],imagen=null){}//truchi02
 
-const metal1 = new Truchimon(nombre='metetal',tipo=metal,saludMaxima=15,ataque=4,ataqueEspecial=6,movimientos=[tacle,tramontina],movimientosPosibles=[trompada,fierrazo,laManoDeDios,cacerolazo],imagen=null )//truchi18
-const metal2 = new Truchimon(nombre='dotal',tipo=metal,saludMaxima=15,ataque=4,ataqueEspecial=6,movimientos=[tacle,tramontina],movimientosPosibles=[trompada,fierrazo,laManoDeDios,cacerolazo],imagen=null )//truchi21
+class Magnemait inherits Truchimon(nombre='magnemait',tipo=metal,saludMaxima=15,ataque=4,ataqueEspecial=6,movimientos=[tacle,tramontina],movimientosPosibles=[trompada,fierrazo,laManoDeDios,cacerolazo],imagen=null){}//truchi18
+class Aaron inherits Truchimon(nombre='aaron',tipo=metal,saludMaxima=15,ataque=4,ataqueEspecial=6,movimientos=[tacle,tramontina],movimientosPosibles=[trompada,fierrazo,laManoDeDios,cacerolazo],imagen=null){}//truchi21
 
-const hielo1 = new Truchimon(nombre='snowflake',tipo=hielo,saludMaxima=30,ataque=4,ataqueEspecial=4,movimientos=[tacle,cubito],movimientosPosibles=[trompada,sambayon,laManoDeDios,granizo],imagen=null )//truchi13
-const hielo2 = new Truchimon(nombre='icyclaws',tipo=hielo,saludMaxima=35,ataque=3,ataqueEspecial=4,movimientos=[tacle,cubito],movimientosPosibles=[trompada,sambayon,laManoDeDios,granizo],imagen=null )//truchi06
+class Glacion inherits Truchimon(nombre='glacion',tipo=hielo,saludMaxima=30,ataque=4,ataqueEspecial=4,movimientos=[tacle,cubito],movimientosPosibles=[trompada,sambayon,laManoDeDios,granizo],imagen=null){}//truchi13
+class Wivil inherits Truchimon(nombre='wivil',tipo=hielo,saludMaxima=35,ataque=3,ataqueEspecial=4,movimientos=[tacle,cubito],movimientosPosibles=[trompada,sambayon,laManoDeDios,granizo],imagen=null){}//truchi06
 
-const viento1 = new Truchimon(nombre='namtab',tipo=viento,saludMaxima=20,ataque=2,ataqueEspecial=2,movimientos=[tacle,pedito],movimientosPosibles=[trompada,eructo,laManoDeDios,bubuzela],imagen=null )//truchi17
-const viento2 = new Truchimon(nombre='caslamon',tipo=viento,saludMaxima=15,ataque=2,ataqueEspecial=3,movimientos=[tacle,pedito],movimientosPosibles=[trompada,eructo,laManoDeDios,bubuzela],imagen=null )//truchi20
+class Zumbat inherits Truchimon(nombre='zumbat',tipo=viento,saludMaxima=20,ataque=2,ataqueEspecial=2,movimientos=[tacle,pedito],movimientosPosibles=[trompada,eructo,laManoDeDios,bubuzela],imagen=null){}//truchi17
+class Spirrou inherits Truchimon(nombre='spirrou',tipo=viento,saludMaxima=15,ataque=2,ataqueEspecial=3,movimientos=[tacle,pedito],movimientosPosibles=[trompada,eructo,laManoDeDios,bubuzela],imagen=null){}//truchi20
 
-const normal1 = new Truchimon(nombre='iivii',tipo=normal,saludMaxima=20,ataque=4,ataqueEspecial=4,movimientos=[tacle],movimientosPosibles=[trompada,laManoDeDios,asado,bubuzela],imagen=null )//truchi08
-const normal2 = new Truchimon(nombre='toga',tipo=normal,saludMaxima=20,ataque=4,ataqueEspecial=4,movimientos=[tacle],movimientosPosibles=[trompada,laManoDeDios,catarata,cacerolazo],imagen=null )//truchi14
+class Iivii inherits Truchimon(nombre='iivii',tipo=normal,saludMaxima=20,ataque=4,ataqueEspecial=4,movimientos=[tacle],movimientosPosibles=[trompada,laManoDeDios,asado,bubuzela],imagen=null){}//truchi08
+class Miau inherits Truchimon(nombre='miau',tipo=normal,saludMaxima=20,ataque=4,ataqueEspecial=4,movimientos=[tacle],movimientosPosibles=[trompada,laManoDeDios,catarata,cacerolazo],imagen=null){}//truchi14
+
 
 
 
