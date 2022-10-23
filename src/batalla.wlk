@@ -73,6 +73,11 @@ object cora2{
 	method position() = game.at(23,13)
 }
 
+object cora2{
+	method image() = 'heart.png'
+	method position() = game.at(23,13)
+}
+
 object vidaOponente{
 	method image() = 'vacio.png'
 	method position() = game.at(22,13)
@@ -124,9 +129,12 @@ object batalla {
 		keyboard.num4().onPressDo{self.nuestroTurno(tr1,tr2,3)}
 		game.start()
 		
+		
+		
+		
 	}
 	
-	method pelea(t1,t2){
+	method pelea(tr1,tr2){
 		
 		if(turno%2==0){//Nuestro turno
 			//Mostrar los ataques
@@ -143,11 +151,13 @@ object batalla {
 	
 	method finBatalla(ganador){
 		console.println('Fin Batalla, gano '+ganador.nombre()+'!!!')
+		ganador.ganarXP()
+		ganador.subeDeNivel()
 		//jungla.iniciar() o coliseo, volver a donde estemos.
 	}
 	
 	method nuestroTurno(t1,t2,indecs){
-		console.println('Nuestro turno')
+		//console.println('Nuestro turno')
 		mov= t1.movimientos().get(indecs)
 		turno+=1
 		console.println('Elegimos '+mov.nombre())
@@ -164,12 +174,16 @@ object batalla {
 	}
 	
 	method turnoPc(t2,t1){
-		mov=tacle
+		mov=t2.movimientos().anyOne()
 		turno+=1
 		
 		console.println('Turno de '+t2.nombre())
 		
+		console.println('Eligio '+mov.nombre())
+		
+		console.println('La vida de '+t1.nombre()+' es de '+t1.salud().toString())
 		t2.atacar(t1,mov)
+		console.println('La vida de '+t1.nombre()+' es de '+t1.salud().toString())
 		
 		if(not t1.murio()){
 			self.pelea(t1,t2)
