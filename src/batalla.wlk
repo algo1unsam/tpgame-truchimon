@@ -73,11 +73,6 @@ object cora2{
 	method position() = game.at(23,13)
 }
 
-object cora2{
-	method image() = 'heart.png'
-	method position() = game.at(23,13)
-}
-
 object vidaOponente{
 	method image() = 'vacio.png'
 	method position() = game.at(22,13)
@@ -134,7 +129,7 @@ object batalla {
 		
 	}
 	
-	method pelea(tr1,tr2){
+	method pelea(t1,t2){
 		
 		if(turno%2==0){//Nuestro turno
 			//Mostrar los ataques
@@ -143,7 +138,7 @@ object batalla {
 		}
 		else{
 			//mov es random para el otro
-			self.turnoPc(tr2,tr1)
+			self.turnoPc(t1,t2)// OJO ESTO PUEDE ESTAR MAL TUVE QUE CORREGIRLO POR QUE ESTABA DUPLICADO.
 		}
 		
 		
@@ -189,11 +184,5 @@ object batalla {
 			self.pelea(t1,t2)
 		}
 		else{self.finBatalla(t2)}
-	}
-	
-	
-	
-	
-	
-	
+	}	
 }
