@@ -7,6 +7,8 @@ class Truchimon{
 	const tipo = null //fuego,agua,etc
 	var saludMaxima = null //max health
 	var property salud = saludMaxima //salud actual
+	var property estado = null
+	var property num = null // Numero de la imagen que le correspone el Truchi
 	
 	var property experiencia = 0
 	
@@ -17,14 +19,12 @@ class Truchimon{
 	const property movimientos = []
 	const movimientosPosibles = []
 	
-	
 	var property position = game.origin() //Ver despues que hacer con la posicion en la jungla
-	
-	const imagen = null
 	method image(){
-		return imagen
+		return 'truchi'+self.anguloPoke()+num+'.png'
 	}
 	
+	method anguloPoke() = estado.anguloPoke()
 	
 	
 	//Logica de niveles y aprender movimientos
@@ -46,7 +46,6 @@ class Truchimon{
 		movimientos.remove(movimientoAOlvidar)
 		game.say(entrenador,self.nombre()+" ya esta grande para usar "+movimientoAOlvidar.nombre())
 	}
-	
 	
 	method aprenderMovimiento(){//Aprende en base al indice del movimiento posible
 		const movimientoAAgregar = movimientosPosibles.get(nivelActual-1)
@@ -279,7 +278,11 @@ class Iivii inherits Truchimon(nombre='iivii',tipo=normal,saludMaxima=20,ataque=
 class Miau inherits Truchimon(nombre='miau',tipo=normal,saludMaxima=20,ataque=4,ataqueEspecial=4,movimientos=[tacle],movimientosPosibles=[trompada,laManoDeDios,catarata,cacerolazo],imagen=null){}//truchi14
 
 
+const viento1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,pedito],/*TODO:Agregar los movimientos posibles*/num=null )
+const viento2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,pedito],/*TODO:Agregar los movimientos posibles*/num=null )
 
+const normal1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle],/*TODO:Agregar los movimientos posibles*/num=null )
+const normal2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle],/*TODO:Agregar los movimientos posibles*/num=null )
 
 
 //8tipo, 3 x tipo=24
