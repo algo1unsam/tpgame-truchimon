@@ -149,6 +149,8 @@ object principal inherits Escenario {
 		game.addVisualCharacter(entrenador)
 		self.crearBordes()
 		
+		game.addVisual(bulbasaur)
+		
 		entrenador.starter(config.starter())
 		
 		keyboard.right().onPressDo{entrenador.moverR()}

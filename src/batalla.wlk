@@ -88,7 +88,9 @@ object batalla {
 	var turno = 0
 	var indice = 0
 	var mov = null
-	var property tr1 = entrenador.truchimonElegido() //Cuando pase la pelea, vamos a setarlos en base a lo que decidamos
+	//var property tr1 = entrenador.truchimonElegido() //Cuando pase la pelea, vamos a setarlos en base a lo que decidamos
+	//var property tr2 = mikali
+	var property tr1 = verguigneo
 	var property tr2 = mikali
 	
 	method iniciar(){

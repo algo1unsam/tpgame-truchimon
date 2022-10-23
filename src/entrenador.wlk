@@ -3,7 +3,21 @@ import config.*
 import escenarios.*
 import truchimones.*
 
-object entrenador {
+class Estados{
+	method anguloPoke()
+}
+
+object salvaje inherits Estados{
+	override method anguloPoke() = 'f'
+}
+
+object enemigo inherits Estados{
+	var property pokemones = []
+	
+	override method anguloPoke() = 'l'
+}
+
+object entrenador inherits Estados{
 	var property pokemones = []
 	var property capacidadPokedex = 10
 	var property pokeballs = 10
@@ -15,6 +29,8 @@ object entrenador {
 	var y = 0
 	var x = 2
 	var property position = game.at(x,y)
+	
+	override method anguloPoke() = 'r'
 	
 	method image(){
 		return dir+((img%3)+1)+".png"

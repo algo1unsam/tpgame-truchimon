@@ -1,4 +1,5 @@
 import wollok.game.*
+import entrenador.*
 
 class Truchimon{
 	//Definicion de variables
@@ -6,6 +7,8 @@ class Truchimon{
 	const tipo = null //fuego,agua,etc
 	var saludMaxima = null //max health
 	var property salud = saludMaxima //salud actual
+	var property estado = null
+	var property num = null // Numero de la imagen que le correspone el Truchi
 	
 	var property experiencia = 0
 	
@@ -21,11 +24,11 @@ class Truchimon{
 	var movimientoAOlvidar = null
 	
 	var property position = game.origin() //Ver despues que hacer con la posicion en la jungla
-	const imagenes = null //Pasarles las tres imagenes en distintos planos
-	const imagen = null
 	method image(){
-		return imagen
+		return 'truchi'+self.anguloPoke()+num+'.png'
 	}
+	
+	method anguloPoke() = estado.anguloPoke()
 	
 	//Logica de niveles y aprender movimientos
 	method subeDeNivel(){
@@ -170,35 +173,35 @@ const hielo = new Tipo()
 
 
 //Ejemplos de Truchimones, porfa dejemoslos tipo easteregg
-const verguigneo = new Truchimon(nombre='verguigneo',tipo=fuego,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,movimientos=[tacle,estrellita,trompada,fogon],imagen="truchi01hi.png")
-const bulbasaur = new Truchimon(nombre='bulbasaur',tipo=planta,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,movimientos=[tacle,yuyazo,trompada,fotosintesis],imagen="truchi01hi.png")
-const mikali = new Truchimon(nombre='mikali',tipo=metal,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,imagen="mikali.png")
+const verguigneo = new Truchimon(estado=entrenador,num='20',nombre='verguigneo',tipo=fuego,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,movimientos=[tacle,estrellita,trompada,fogon])
+const bulbasaur = new Truchimon(estado=salvaje,num='02',nombre='bulbasaur',tipo=planta,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,movimientos=[tacle,yuyazo,trompada,fotosintesis])
+const mikali = new Truchimon(estado=enemigo,num='21',nombre='mikali',tipo=metal,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10)
 
 
 //Truchimones posta, son presets, los personalizamos despues
-const fuego1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,estrellita],/*TODO:Agregar los movimientos posibles*/imagen=null )
-const fuego2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,estrellita],/*TODO:Agregar los movimientos posibles*/imagen=null )
+const fuego1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,estrellita],/*TODO:Agregar los movimientos posibles*/num=null )
+const fuego2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,estrellita],/*TODO:Agregar los movimientos posibles*/num=null )
 
-const planta1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,yuyazo],/*TODO:Agregar los movimientos posibles*/imagen=null )
-const planta2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,yuyazo],/*TODO:Agregar los movimientos posibles*/imagen=null )
+const planta1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,yuyazo],/*TODO:Agregar los movimientos posibles*/num=null )
+const planta2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,yuyazo],/*TODO:Agregar los movimientos posibles*/num=null )
 
-const agua1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,garzo],/*TODO:Agregar los movimientos posibles*/imagen=null )
-const agua2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,garzo],/*TODO:Agregar los movimientos posibles*/imagen=null )
+const agua1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,garzo],/*TODO:Agregar los movimientos posibles*/num=null )
+const agua2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,garzo],/*TODO:Agregar los movimientos posibles*/num=null )
 
-const tierra1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,barro],/*TODO:Agregar los movimientos posibles*/imagen=null )
-const tierra2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,barro],/*TODO:Agregar los movimientos posibles*/imagen=null )
+const tierra1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,barro],/*TODO:Agregar los movimientos posibles*/num=null )
+const tierra2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,barro],/*TODO:Agregar los movimientos posibles*/num=null )
 
-const metal1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,tramontina],/*TODO:Agregar los movimientos posibles*/imagen=null )
-const metal2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,tramontina],/*TODO:Agregar los movimientos posibles*/imagen=null )
+const metal1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,tramontina],/*TODO:Agregar los movimientos posibles*/num=null )
+const metal2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,tramontina],/*TODO:Agregar los movimientos posibles*/num=null )
 
-const hielo1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,cubito],/*TODO:Agregar los movimientos posibles*/imagen=null )
-const hielo2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,cubito],/*TODO:Agregar los movimientos posibles*/imagen=null )
+const hielo1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,cubito],/*TODO:Agregar los movimientos posibles*/num=null )
+const hielo2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,cubito],/*TODO:Agregar los movimientos posibles*/num=null )
 
-const viento1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,pedito],/*TODO:Agregar los movimientos posibles*/imagen=null )
-const viento2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,pedito],/*TODO:Agregar los movimientos posibles*/imagen=null )
+const viento1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,pedito],/*TODO:Agregar los movimientos posibles*/num=null )
+const viento2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,pedito],/*TODO:Agregar los movimientos posibles*/num=null )
 
-const normal1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle],/*TODO:Agregar los movimientos posibles*/imagen=null )
-const normal2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle],/*TODO:Agregar los movimientos posibles*/imagen=null )
+const normal1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle],/*TODO:Agregar los movimientos posibles*/num=null )
+const normal2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle],/*TODO:Agregar los movimientos posibles*/num=null )
 
 
 //8tipo, 3 x tipo=24
