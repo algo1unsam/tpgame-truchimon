@@ -1,6 +1,7 @@
 import wollok.game.*
 import config.*
 import escenarios.*
+import truchimones.*
 
 object entrenador {
 	var property pokemones = []
@@ -11,8 +12,8 @@ object entrenador {
 //CODIGO DE IMAGEN Y MOVIMIENTO
 	var img = 1
 	var dir = "F"
-	var y = 1
-	var x = 5
+	var y = 0
+	var x = 2
 	var property position = game.at(x,y)
 	
 	method image(){
@@ -26,13 +27,13 @@ object entrenador {
 		x = x.limitBetween(0,config.width() - 1)
 		
 		if (config.colisionaEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
-			game.say(self, mensajes.choque())
+			//game.say(self, mensajes.choque())
 			x -= 1
 			x = x.limitBetween(0,config.width() - 1)
 		}
 		
 		if (config.entraAlEscenarioEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
-			game.say(self, mensajes.entrada())
+			//game.say(self, mensajes.entrada())
 			junglaModo.iniciar()
 		}
 		position = game.at(x,y)
@@ -109,7 +110,8 @@ object entrenador {
 	}
 
 	method truchimonElegido(){
-		return verguigneo
+		const num = 0.randomUpTo(pokemones.size()-1)
+		return pokemones.get(num)
 	}
 	
 	method elegirPokemon(){

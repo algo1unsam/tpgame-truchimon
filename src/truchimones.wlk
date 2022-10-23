@@ -20,14 +20,12 @@ class Truchimon{
 	const movimientosPosibles = []
 	var movimientoAOlvidar = null
 	
-	
 	var property position = game.origin() //Ver despues que hacer con la posicion en la jungla
-	
+	const imagenes = null //Pasarles las tres imagenes en distintos planos
 	const imagen = null
 	method image(){
 		return imagen
 	}
-	
 	
 	//Logica de niveles y aprender movimientos
 	method subeDeNivel(){
@@ -43,23 +41,15 @@ class Truchimon{
 				self.aprenderMovimiento()
 			}
 			self.aumentoDeStats()
-			
-			
-			
-			
-			
-			
+	
 		}
-			
-					
-		
+
 	}
 	
 	method olvidarUnMovimiento(){
 		//TODO: definir el movimiento a olvidar
 		movimientos.remove(movimientoAOlvidar)
 	}
-	
 	
 	method aprenderMovimiento(){//Aprende en base al indice del movimiento posible
 		movimientos.add(movimientosPosibles.get(self.nivel()-1))
@@ -180,8 +170,8 @@ const hielo = new Tipo()
 
 
 //Ejemplos de Truchimones, porfa dejemoslos tipo easteregg
-const verguigneo = new Truchimon(nombre='verguigneo',tipo=fuego,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,movimientos=[tacle,estrellita,trompada,fogon],imagen="Pokebola.jpg")
-const bulbasaur = new Truchimon(nombre='bulbasaur',tipo=planta,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,movimientos=[tacle,yuyazo,trompada,fotosintesis],imagen="pixil-frame-0.png")
+const verguigneo = new Truchimon(nombre='verguigneo',tipo=fuego,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,movimientos=[tacle,estrellita,trompada,fogon],imagen="truchi01hi.png")
+const bulbasaur = new Truchimon(nombre='bulbasaur',tipo=planta,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,movimientos=[tacle,yuyazo,trompada,fotosintesis],imagen="truchi01hi.png")
 const mikali = new Truchimon(nombre='mikali',tipo=metal,saludMaxima=20,ataque=10,defensa=10,velocidad=10,ataqueEspecial=10,defensaEspecial=10,imagen="mikali.png")
 
 
@@ -209,8 +199,6 @@ const viento2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TO
 
 const normal1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle],/*TODO:Agregar los movimientos posibles*/imagen=null )
 const normal2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle],/*TODO:Agregar los movimientos posibles*/imagen=null )
-
-
 
 
 //8tipo, 3 x tipo=24
