@@ -4,21 +4,21 @@ import escenarios.*
 import truchimones.*
 
 class Estados{
-	method anguloPoke()
+	method perfilPoke()
 }
 
 object salvaje inherits Estados{
-	override method anguloPoke() = 'f'
+	override method perfilPoke() = 'f'
 }
 
 object enemigo inherits Estados{
 	var property pokemones = []
 	
-	override method anguloPoke() = 'l'
+	override method perfilPoke() = 'l'
 }
 
 object entrenador inherits Estados{
-	var property pokemones = []
+	var property pokemones = [new Ponita(estado= self), new Zumbat(estado = self), new Miau(estado = self)]
 	var property capacidadPokedex = 10
 	var property pokeballs = 10
 	var property starter = null
@@ -30,7 +30,7 @@ object entrenador inherits Estados{
 	var x = 2
 	var property position = game.at(x,y)
 	
-	override method anguloPoke() = 'r'
+	override method perfilPoke() = 'r'
 	
 	method image(){
 		return dir+((img%3)+1)+".png"
