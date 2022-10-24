@@ -47,7 +47,7 @@ object juego{
 
 program juego {
 	juego.configurar()
-	game.addVisualCharacter(mikali)
+	//game.addVisualCharacter(mikali)
 	game.start()
 	
 }

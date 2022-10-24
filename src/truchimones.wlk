@@ -3,78 +3,73 @@ import entrenador.*
 
 class Truchimon{
 	//Definicion de variables
-	var property nombre  //o especie
-	const tipo = null //fuego,agua,etc
-	var saludMaxima = null //max health
-	var property salud = saludMaxima //salud actual
-	var property estado = null
-	var property num = null // Numero de la imagen que le correspone el Truchi
-	
-	var property experiencia = 0
-	
-	var property ataque = null   //aniade danio al movimiento que use
+	//var property nombre  									<- esta al pedo
+	const tipo = null 										// fuego, agua, etc
+	var saludMaxima = null 									// max health
+	var property salud = saludMaxima 						// salud actual
+	var property estado = salvaje							// identifica si tiene o no dueño	
+	var property ataque = null   							// Añade Daño al movimiento que use
 	var property ataqueEspecial = null
 	var property nivelActual = 1
-	
-	const property movimientos = []
+	var property experiencia = 0
+		
+	const movimientos = []
 	const movimientosPosibles = []
+	const maxMovimientos = 4
+	var property position = game.origin() 					// Ver despues que hacer con la posicion en la jungla
 	
-	var property position = game.origin() //Ver despues que hacer con la posicion en la jungla
-	method image(){
-		return 'truchi'+self.anguloPoke()+num+'.png'
-	}
+	const property num = null 								// Numero del tipo -> truchif{01}.png siendo el nro el valor entre {}
+		
+	method movimientosBase() = [tacle]
+	method movimientosPosibles() = [trompada, laManoDeDios]
+	method movimientos() = self.movimientosBase() + movimientos
 	
-	method anguloPoke() = estado.anguloPoke()
+	method nombre() = self.printString()
+	// Aprende el siguiente en la lista de posibles según su nivel
 	
-	
-	//Logica de niveles y aprender movimientos
-	method subeDeNivel(){
-		if(nivelActual<self.nivel()){
-			nivelActual+=1
-			game.say(entrenador,self.nombre()+" subio a nivel "+nivelActual.toString())
-			self.aumentoDeStats()
-			if(self.noPuedeAprenderMovimiento()){//Si no puede aprender, olvida uno
-				//TODO:Hacer la seleccion del movimiento a olvidar, si se quiere aprender el nuevo
-				self.olvidarUnMovimiento()
-			}
-			self.aprenderMovimiento()
-		}
+	method aprenderMovimiento(){
+		const movimientoMejorado = movimientosPosibles.get(nivelActual-1)		
+		if (!self.puedoAprender()) { self.olvidarUnMovimiento() } // si no puedo aprender borro el obsoleto 
+		movimientos.add(movimientoMejorado)		
+		game.say(entrenador, self.printString() + " aprendió a usar " + movimientoMejorado.printString())
 	}
 	
 	method olvidarUnMovimiento(){
-		const movimientoAOlvidar= movimientos.get(nivelActual - 5)
-		movimientos.remove(movimientoAOlvidar)
-		game.say(entrenador,self.nombre()+" ya esta grande para usar "+movimientoAOlvidar.nombre())
+		const movimientoObsoleto = movimientos.first()
+		movimientos.remove(movimientoObsoleto)
+		game.say(entrenador, self.toString() + " olvidó " + movimientoObsoleto.toString())
 	}
 	
-	method aprenderMovimiento(){//Aprende en base al indice del movimiento posible
-		const movimientoAAgregar = movimientosPosibles.get(nivelActual-1)
-		movimientos.add(movimientoAAgregar)
-		game.say(entrenador,"En su lugar, ahora aprendio a usar "+movimientoAAgregar.nombre())
-	}
+	method puedoAprender() = (maxMovimientos < movimientos.size())
 	
-	method nivel(){//arrancan con nivel 1, hasta maximo 5!!
-		return 5.max((experiencia/100).roundUp())
-	}
+	method expPorLevel() = 100*1.5**(nivelActual+1)
+	
+	// Retorna el Valor del png necesario para la imagen
+	method image() = ('truchi' + self.perfilPoke() + num + '.png') 
+	
+	// La imagen debe mostrarse en pantalla de frente, izq o derecha en base al estado del truchi
+	method perfilPoke() = estado.perfilPoke()
+			
+	//Logica de niveles y aprender movimientos
+	method subeDeNivel(){
+		if( experiencia >= self.expPorLevel() and nivelActual < 5 ){
+			nivelActual += 1
+			game.say(entrenador, self.printString() + " subio a nivel -> " + nivelActual.toString())
+			self.aumentoDeStats()
+			self.aprenderMovimiento()
+		}
+	}	
 	
 	method ganarXP(){
 		experiencia += 40
-	}
-	
-	method noPuedeAprenderMovimiento(){//Puede tener hasta 4 movimientos
-		return movimientos.size()==4
 	}
 	
 	method aumentoDeStats(){
 		//TODO: que tanto aumentan, si todos igual o no. Lo ideal seria que dependa del tipo del truchimon
 		saludMaxima += 15
 		ataque += nivelActual-1
-		ataqueEspecial += nivelActual -1 
-	
-	}
-	
-	
-	
+		ataqueEspecial += nivelActual -1 	
+	}	
 	
 	//Dinamicas ataques
 	method atacar(truchimon,movimiento){ //Al atacar a otro truchimon hago que ejecute su metodo recibirAtaque
@@ -83,12 +78,7 @@ class Truchimon{
 			if(tipo.esPlanta() and movimiento.esTipoPlanta()){
 				self.curarse(truchimon,movimiento)
 			}
-			
 		}
-		
-		
-		
-		
 	}
 	
 	method recibirAtaque(movimiento,atacante){//Reduce la salud en base al danio generado por el ataque multiplicado por el factor de tipos
@@ -101,8 +91,7 @@ class Truchimon{
 	
 	method factorDeTipos(mov){ //Si soy resistente, el danio del ataque se reduce a la mitad, si soy debil es el doble y si no es ninguno, va directo.
 		return if (tipo.soyResistenteA(mov)) 1/2 else if(tipo.soyDebilA(mov)) 2 else 1
-	}
-	
+	}	
 	
 	method curarse(truchimon,movimiento){
 		salud = saludMaxima.min(salud + truchimon.danioRecibido(movimiento,self)/2)
@@ -118,11 +107,45 @@ class Truchimon{
 	
 	method puedeEsquivar(){
 		return tipo.puedeEsquivar()
-	}
-	
+	}	
+}
+
+class TruchimonFuego inherits Truchimon{
+	override method movimientosBase() = super() + [estrellita]
+	override method movimientosPosibles() = super() + [fogon, asado]
+}
+
+class TruchimonPlanta inherits Truchimon{
+	override method movimientosBase() = super() + [matecito]
+	override method movimientosPosibles() = super() + [fotosintesis, pachamama]
+}
+
+class TruchimonAgua inherits Truchimon{
+	override method movimientosBase() = super() + [escupitajo]
+	override method movimientosPosibles() = super() + [sodazo, catarata]
+}
+
+class TruchimonTierra inherits Truchimon{
+	override method movimientosBase() = super() + [barro]
+	override method movimientosPosibles() = super() + [pozo, zanja]
+}
+class TruchimonMetal inherits Truchimon{
+	override method movimientosBase() = super() + [tramontina]
+	override method movimientosPosibles() = super() + [fierrazo, cacerolazo]
+}
+
+class TruchimonHielo inherits Truchimon{
+	override method movimientosBase() = super() + [cubito]
+	override method movimientosPosibles() = super() + [sambayon, granizo]
+}
+
+class TruchimonViento inherits Truchimon{
+	override method movimientosBase() = super() + [flatulencia]
+	override method movimientosPosibles() = super() + [eructo, bubuzela]
 }
 
 class Movimiento {
+	const property index = null
 	const property nombre = null
 	const property tipo=null
 	const danioBase = null
@@ -231,19 +254,15 @@ object settingDeTipos{
 		metal.agregarDebilidades([fuego,viento])
 		metal.agregarResistencias([planta,tierra,hielo])
 		hielo.agregarDebilidades([fuego,agua,metal])
-		hielo.agregarResistencias([planta])
-		
-		
-		
-	}
-	
+		hielo.agregarResistencias([planta])		
+	}	
 }
 
 
 //Ejemplos de Truchimones, porfa dejemoslos tipo easteregg
-const verguigneo = new Truchimon(nombre='verguigneo',tipo=fuego,saludMaxima=20,ataque=10,ataqueEspecial=10,movimientos=[tacle,estrellita,trompada,fogon],imagen="Pokebola.jpg")
-const bulbasaur = new Truchimon(nombre='bulbasaur',tipo=planta,saludMaxima=20,ataque=10,ataqueEspecial=10,movimientos=[tacle,matecito,trompada,fotosintesis],imagen="pixil-frame-0.png")
-const mikali = new Truchimon(nombre='mikali',tipo=metal,saludMaxima=20,ataque=10,ataqueEspecial=10,imagen="mikali.png")
+//const verguigneo = new TruchimonFuego(estado=entrenado, num='20',tipo=fuego,saludMaxima=20,ataque=10,ataqueEspecial=10)
+//const bulbasaur = new Truchimon(estado=salvaje, num='02',tipo=planta,saludMaxima=20,ataque=10,ataqueEspecial=10,movimientos=[tacle,matecito,trompada,fotosintesis])
+//const mikali = new Truchimon(estado=enemigo, lklknum='21',tipo=metal,saludMaxima=20,ataque=10,ataqueEspecial=10)
 
 
 //Truchimones posta, son presets, los personalizamos despues
@@ -252,71 +271,63 @@ const mikali = new Truchimon(nombre='mikali',tipo=metal,saludMaxima=20,ataque=10
 //Ataque especial base = 4
 
 
-class Charmilion inherits Truchimon(nombre = 'charmilion',tipo=fuego,saludMaxima=20,ataque=3,ataqueEspecial=5,movimientos=[tacle,estrellita],movimientosPosibles=[trompada,fogon,laManoDeDios,asado],imagen=null ){}//truchi01
-class Ponita inherits Truchimon(nombre='ponita',tipo=fuego,saludMaxima=20,ataque=4,ataqueEspecial=5,movimientos=[tacle,estrellita],movimientosPosibles=[trompada,fogon,laManoDeDios,asado],imagen=null ){}//truchi15
+class Charmilion inherits  	TruchimonFuego ( tipo=fuego, 	saludMaxima=20, ataque=3, ataqueEspecial=5, num=01 ){}	//truchi01
+class Ponita inherits  		TruchimonFuego ( tipo=fuego,	saludMaxima=20, ataque=4, ataqueEspecial=5, num=15 ){}	//truchi15
 
-class Lifeon inherits Truchimon(nombre='lifeon',tipo=planta,saludMaxima=20,ataque=4,ataqueEspecial=3,movimientos=[tacle,matecito],movimientosPosibles=[trompada,fotosintesis,laManoDeDios,pachamama],imagen=null){}//truchi03
-class Medestapod inherits Truchimon(nombre='medestapod',tipo=planta,saludMaxima=30,ataque=3,ataqueEspecial=1,movimientos=[tacle,matecito],movimientosPosibles=[trompada,fotosintesis,laManoDeDios,pachamama],imagen=null){}//truchi07
-class Grukey inherits Truchimon(nombre='grukey',tipo=planta,saludMaxima=20,ataque=4,ataqueEspecial=2,movimientos=[tacle,matecito],movimientosPosibles=[trompada,fotosintesis,laManoDeDios,pachamama],imagen=null){}//truchi11
+class Lifeon inherits 		TruchimonPlanta( tipo=planta,	saludMaxima=20,	ataque=4, ataqueEspecial=3, num=03 ){}	//truchi03
+class Medestapod inherits 	TruchimonPlanta( tipo=planta,	saludMaxima=30,	ataque=3, ataqueEspecial=1, num=07 ){}	//truchi07
+class Grukey inherits 		TruchimonPlanta( tipo=planta,	saludMaxima=20,	ataque=4, ataqueEspecial=2,	num=11 ){}	//truchi11
 
-class Jorsi inherits Truchimon(nombre='jorsi',tipo=agua,saludMaxima=20,ataque=4,ataqueEspecial=4,movimientos=[tacle,escupitajo],movimientosPosibles=[trompada,sodazo,laManoDeDios,catarata],imagen=null){}//truchi09
-class Sil inherits Truchimon(nombre='sil',tipo=agua,saludMaxima=20,ataque=4,ataqueEspecial=4,movimientos=[tacle,escupitajo],movimientosPosibles=[trompada,sodazo,laManoDeDios,catarata],imagen=null){}//truchi16
+class Jorsi inherits 		TruchimonAgua  ( tipo=agua,		saludMaxima=20,	ataque=4, ataqueEspecial=4, num=09 ){}	//truchi09
+class Sil inherits 			TruchimonAgua  ( tipo=agua,		saludMaxima=20,	ataque=4, ataqueEspecial=4, num=16 ){}	//truchi16
 
-class Jeodud inherits Truchimon(nombre='jeodud',tipo=tierra,saludMaxima=30,ataque=3,ataqueEspecial=4,movimientos=[tacle,barro],movimientosPosibles=[trompada,pozo,laManoDeDios,zanja],imagen=null){}//truchi19
-class Umbrion inherits Truchimon(nombre='umbrion',tipo=tierra,saludMaxima=35,ataque=3,ataqueEspecial=3,movimientos=[tacle,barro],movimientosPosibles=[trompada,pozo,laManoDeDios,zanja],imagen=null){}//truchi02
+class Jeodud inherits 		TruchimonTierra( tipo=tierra,	saludMaxima=30,	ataque=3, ataqueEspecial=4, num=19 ){}	//truchi19
+class Umbrion inherits 		TruchimonTierra( tipo=tierra,	saludMaxima=35,	ataque=3, ataqueEspecial=3, num=02 ){}	//truchi02
 
-class Magnemait inherits Truchimon(nombre='magnemait',tipo=metal,saludMaxima=15,ataque=4,ataqueEspecial=6,movimientos=[tacle,tramontina],movimientosPosibles=[trompada,fierrazo,laManoDeDios,cacerolazo],imagen=null){}//truchi18
-class Aaron inherits Truchimon(nombre='aaron',tipo=metal,saludMaxima=15,ataque=4,ataqueEspecial=6,movimientos=[tacle,tramontina],movimientosPosibles=[trompada,fierrazo,laManoDeDios,cacerolazo],imagen=null){}//truchi21
+class Magnemait inherits 	TruchimonMetal ( tipo=metal,	saludMaxima=15,	ataque=4, ataqueEspecial=6, num=18 ){}	//truchi18
+class Aaron inherits 		TruchimonMetal ( tipo=metal,	saludMaxima=15,	ataque=4, ataqueEspecial=6, num=21 ){}	//truchi21
 
-class Glacion inherits Truchimon(nombre='glacion',tipo=hielo,saludMaxima=30,ataque=4,ataqueEspecial=4,movimientos=[tacle,cubito],movimientosPosibles=[trompada,sambayon,laManoDeDios,granizo],imagen=null){}//truchi13
-class Wivil inherits Truchimon(nombre='wivil',tipo=hielo,saludMaxima=35,ataque=3,ataqueEspecial=4,movimientos=[tacle,cubito],movimientosPosibles=[trompada,sambayon,laManoDeDios,granizo],imagen=null){}//truchi06
+class Glacion inherits 		TruchimonHielo ( tipo=hielo,	saludMaxima=30,	ataque=4, ataqueEspecial=4, num=13){}	//truchi13
+class Wivil inherits 		TruchimonHielo ( tipo=hielo,	saludMaxima=35,	ataque=3, ataqueEspecial=4, num=06){}	//truchi06
 
-class Zumbat inherits Truchimon(nombre='zumbat',tipo=viento,saludMaxima=20,ataque=2,ataqueEspecial=2,movimientos=[tacle,pedito],movimientosPosibles=[trompada,eructo,laManoDeDios,bubuzela],imagen=null){}//truchi17
-class Spirrou inherits Truchimon(nombre='spirrou',tipo=viento,saludMaxima=15,ataque=2,ataqueEspecial=3,movimientos=[tacle,pedito],movimientosPosibles=[trompada,eructo,laManoDeDios,bubuzela],imagen=null){}//truchi20
+class Zumbat inherits 		TruchimonViento( tipo=viento,	saludMaxima=20,	ataque=2, ataqueEspecial=2, num=17){}	//truchi17
+class Spirrou inherits 		TruchimonViento( tipo=viento,	saludMaxima=15,	ataque=2, ataqueEspecial=3, num=20){}	//truchi20
 
-class Iivii inherits Truchimon(nombre='iivii',tipo=normal,saludMaxima=20,ataque=4,ataqueEspecial=4,movimientos=[tacle],movimientosPosibles=[trompada,laManoDeDios,asado,bubuzela],imagen=null){}//truchi08
-class Miau inherits Truchimon(nombre='miau',tipo=normal,saludMaxima=20,ataque=4,ataqueEspecial=4,movimientos=[tacle],movimientosPosibles=[trompada,laManoDeDios,catarata,cacerolazo],imagen=null){}//truchi14
-
-
-const viento1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,pedito],/*TODO:Agregar los movimientos posibles*/num=null )
-const viento2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle,pedito],/*TODO:Agregar los movimientos posibles*/num=null )
-
-const normal1 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle],/*TODO:Agregar los movimientos posibles*/num=null )
-const normal2 = new Truchimon(/*TODO: nombrar cada uno al final*/tipo=fuego,/*TODO:ponerles stats al final*/movimientos=[tacle],/*TODO:Agregar los movimientos posibles*/num=null )
-
+class Iivii inherits 		Truchimon      ( tipo=normal,	saludMaxima=20,	ataque=4, ataqueEspecial=4, num=08, movimientosPosibles=[asado, bubuzela]){}		//truchi08
+class Miau inherits 		Truchimon      ( tipo=normal,	saludMaxima=20,	ataque=4, ataqueEspecial=4, num=14, movimientosPosibles=[catarata, cacerolazo]){}	//truchi14
 
 //8tipo, 3 x tipo=24
-const tacle= new Movimiento(nombre="tacle",danioBase=5,tipo=normal)
-const trompada= new Movimiento(nombre="trompada",danioBase=10,tipo=normal)
-const laManoDeDios= new Movimiento(nombre='laManoDeDios',danioBase=15,tipo=normal)
+const tacle= 			new Movimiento(danioBase=5,	tipo=normal, index= 0)
+const trompada= 		new Movimiento(danioBase=10,tipo=normal, index= 2)
+const laManoDeDios= 	new Movimiento(danioBase=15,tipo=normal, index= 4)
 
-const estrellita=new Movimiento(nombre='estrellita',danioBase=5,tipo=fuego)
-const fogon=new Movimiento(nombre='fogon',danioBase=10,tipo=fuego)
-const asado=new Movimiento(nombre='asado',danioBase=15,tipo=fuego)
+const estrellita=		new Movimiento(danioBase=5,	tipo=fuego)
+const fogon=			new Movimiento(danioBase=10,tipo=fuego)
+const asado=			new Movimiento(danioBase=15,tipo=fuego, index= 5)
 
-const escupitajo = new Movimiento(nombre='escupitajo',danioBase=5,tipo=agua)
-const sodazo = new Movimiento(nombre='sodazo',danioBase=10,tipo=agua)
-const catarata = new Movimiento(nombre='catarata',danioBase=15,tipo=agua)
+const escupitajo = 		new Movimiento(danioBase=5,	tipo=agua, index= 1)
+const sodazo = 			new Movimiento(danioBase=10,tipo=agua)
+const catarata = 		new Movimiento(danioBase=15,tipo=agua, index= 5)
 
-const matecito = new Movimiento(nombre = 'matecito',danioBase=5,tipo=planta)
-const fotosintesis = new Movimiento(nombre='fotosintesis',danioBase=10,tipo=planta)
-const pachamama = new Movimiento(nombre='pachamama',danioBase=15,tipo=planta)
+const matecito = 		new Movimiento(danioBase=5,	tipo=planta, index= 1)
+const fotosintesis =	new Movimiento(danioBase=10,tipo=planta)
+const pachamama = 		new Movimiento(danioBase=15,tipo=planta, index= 5)
 
-const barro = new Movimiento(nombre='barro',danioBase=5,tipo=tierra)
-const pozo = new Movimiento(nombre='pozo',danioBase=10,tipo=tierra)
-const zanja = new Movimiento(nombre='zanja',danioBase=15,tipo=tierra)
+const barro = 			new Movimiento(danioBase=5,	tipo=tierra, index= 1)
+const pozo = 			new Movimiento(danioBase=10,tipo=tierra)
+const zanja = 			new Movimiento(danioBase=15,tipo=tierra, index= 5)
 
-const cubito = new Movimiento(nombre='cubito',danioBase=5,tipo=hielo)
-const sambayon = new Movimiento(nombre='sambayon',danioBase=10,tipo=hielo)
-const granizo = new Movimiento(nombre='granizo',danioBase=15,tipo=hielo)
+const cubito = 			new Movimiento(danioBase=5,	tipo=hielo, index= 1)
+const sambayon = 		new Movimiento(danioBase=10,tipo=hielo)
+const granizo = 		new Movimiento(danioBase=15,tipo=hielo, index= 5)
 
-const tramontina = new Movimiento(nombre='tramontina',danioBase=5,tipo=metal)
-const fierrazo = new Movimiento(nombre='fierrazo',danioBase=10,tipo=metal)
-const cacerolazo = new Movimiento(nombre='cacerolazo',danioBase=15,tipo=metal)
+const tramontina = 		new Movimiento(danioBase=5,	tipo=metal, index= 1)
+const fierrazo = 		new Movimiento(danioBase=10,tipo=metal)
+const cacerolazo = 		new Movimiento(danioBase=15,tipo=metal, index= 5)
 
-const pedito = new Movimiento(nombre='pedito',danioBase=5,tipo=viento)
-const eructo = new Movimiento(nombre='eructo',danioBase=10,tipo=viento)
-const bubuzela = new Movimiento(nombre='bubuzela',danioBase=15,tipo=viento)
+const flatulencia = 	new Movimiento(danioBase=5,	tipo=viento, index= 1)
+const eructo = 			new Movimiento(danioBase=10,tipo=viento)
+const bubuzela = 		new Movimiento(danioBase=15,tipo=viento, index= 5)
 
 
 

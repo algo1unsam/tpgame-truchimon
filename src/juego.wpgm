@@ -2,7 +2,6 @@ import wollok.game.*
 import entrenador.*
 import escenarios.*
 import config.*
-import jungla.*
 import truchimones.*
 
 program Truchimon {
