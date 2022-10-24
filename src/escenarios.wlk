@@ -1,7 +1,6 @@
 import wollok.game.*
 import config.*
 import entrenador.*
-import jungla.*
 import truchimones.*
 
 class Estructura {}
