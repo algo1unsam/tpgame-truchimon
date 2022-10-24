@@ -149,7 +149,7 @@ object principal inherits Escenario {
 		game.addVisualCharacter(entrenador)
 		self.crearBordes()
 		
-		game.addVisual(bulbasaur)
+		//game.addVisual(bulbasaur)
 		
 		entrenador.starter(config.starter())
 		
