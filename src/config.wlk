@@ -1,12 +1,12 @@
 import escenarios.*
 import wollok.game.*
+import entrenador.*
 
 object config {
 	// var property escenarioActual = intro // intro, main, jungla, hospital o batalla	
-	var property starter = null
 	const property width = 24
 	const property height = 14
-	const property colisionables = [jungla, hospital, coliseo, casarandom, bosque, lago]
+	const property colisionables = [rocas, hospital, coliseo, casarandom, bosque, lago]
 	var property escenarioActual = mensajes.introName()
 	
 	method run() {
@@ -19,7 +19,7 @@ object config {
 	}
 	
 	method agregarStarter(truchimon) {
-		starter = truchimon
+		player.truchimones(truchimon)
 		self.cambiarEscenario(mensajes.principalName())
 		principal.iniciar()
 	}
@@ -49,7 +49,7 @@ object config {
 
 
 object mensajes {
-	const property choque = ""
+	const property choque = "por aca no!!"
 	const property entrada = "Entrandoooooo"
 	const property junglaName = "Jungla"
 	const property hospitalName = "Hospital"
