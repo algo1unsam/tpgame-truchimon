@@ -1,6 +1,8 @@
 import truchimones.*
+import escenarios.*
+import wollok.game.*
 
-describe "Acciones del truchimon de fuego" {
+describe "Acciones del truchimon de fuego" {	
 	const sarasamon = new Charmilion()
 	const jajamon = new Zumbat()
 	
@@ -13,6 +15,8 @@ describe "Acciones del truchimon de fuego" {
 	}
 	
 	test "Truchimon hace danio a otro y le baja vida" {
+		jajamon.position(game.at(2, 2))
+		game.addVisual(jajamon)
 		const saludInicial = jajamon.salud()
 		sarasamon.atacar(jajamon, fogon)
 		const saludFinal = jajamon.salud()
@@ -20,6 +24,10 @@ describe "Acciones del truchimon de fuego" {
 	}
 	
 	test "Truchimon pelea hasta ganarle a otro" {
+		jajamon.position(game.at(2, 2))
+		sarasamon.position(game.at(2, 3))
+		game.addVisual(jajamon)
+		game.addVisual(sarasamon)
 		sarasamon.atacar(jajamon, fogon)
 		sarasamon.atacar(jajamon, fogon)
 		sarasamon.atacar(jajamon, fogon)
@@ -30,20 +38,24 @@ describe "Acciones del truchimon de fuego" {
 	test "Truchimon aumenta experiencia dos veces" {
 		sarasamon.ganarXP()
 		sarasamon.ganarXP()
-		assert.equals(80, sarasamon.experiencia())
+		assert.equals(400, sarasamon.experiencia())
 	}
 	
 	test "Truchimon gana una nueva habilidad" {
+		game.addVisual(sarasamon)
+		sarasamon.position(game.at(2, 3))
 		sarasamon.aprenderMovimiento()
-		assert.equals(2, sarasamon.movimientos().size())
+		assert.equals(3, sarasamon.movimientos().size())
 	}
 	
 	test "Truchimon gana una nueva habilidad pero no pierde otra, llega al maximo de habilidades" {
+		game.addVisual(sarasamon)
+		sarasamon.position(game.at(2, 3))
 		sarasamon.aprenderMovimiento()
 		sarasamon.aprenderMovimiento()
 		sarasamon.aprenderMovimiento()
 		sarasamon.aprenderMovimiento()
 		sarasamon.aprenderMovimiento()
-		assert.equals(4, sarasamon.movimientos().size())
+		assert.notThat(sarasamon.puedoAprender())
 	}
 }
