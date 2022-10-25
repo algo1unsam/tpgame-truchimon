@@ -1,0 +1,49 @@
+import truchimones.*
+
+describe "Acciones del truchimon de fuego" {
+	const sarasamon = new Charmilion()
+	const jajamon = new Zumbat()
+	
+	test "Truchimon sarasamon es de tipo fuego" {
+		assert.equals(fuego, sarasamon.tipo())
+	}
+	
+	test "Truchimon jajamon es de tipo viento" {
+		assert.equals(viento, jajamon.tipo())
+	}
+	
+	test "Truchimon hace danio a otro y le baja vida" {
+		const saludInicial = jajamon.salud()
+		sarasamon.atacar(jajamon, fogon)
+		const saludFinal = jajamon.salud()
+		assert.that(saludInicial > saludFinal) // Puede fallar debido al factor probabilistico
+	}
+	
+	test "Truchimon pelea hasta ganarle a otro" {
+		sarasamon.atacar(jajamon, fogon)
+		sarasamon.atacar(jajamon, fogon)
+		sarasamon.atacar(jajamon, fogon)
+		sarasamon.atacar(jajamon, fogon)
+		assert.equals(0, jajamon.salud()) // Puede fallar debido al factor probabilistico
+	}
+	
+	test "Truchimon aumenta experiencia dos veces" {
+		sarasamon.ganarXP()
+		sarasamon.ganarXP()
+		assert.equals(80, sarasamon.experiencia())
+	}
+	
+	test "Truchimon gana una nueva habilidad" {
+		sarasamon.aprenderMovimiento()
+		assert.equals(2, sarasamon.movimientos().size())
+	}
+	
+	test "Truchimon gana una nueva habilidad pero no pierde otra, llega al maximo de habilidades" {
+		sarasamon.aprenderMovimiento()
+		sarasamon.aprenderMovimiento()
+		sarasamon.aprenderMovimiento()
+		sarasamon.aprenderMovimiento()
+		sarasamon.aprenderMovimiento()
+		assert.equals(4, sarasamon.movimientos().size())
+	}
+}
