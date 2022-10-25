@@ -6,6 +6,10 @@ import escenarios.*
 object batalla{
 	var turno = 0
 	
+	var property peleaEntrenador = false
+	var property indiceEntrenador = null
+	
+	
 	var property truchi_amigo = null
 	var property truchi_enemigo = null
 	
@@ -46,6 +50,7 @@ object batalla{
 		truchi_amigo.position(game.at(6,4))
 		
 		//Set enemigo
+		truchi_enemigo.visible(true)
 		truchi_enemigo.estado(enemigo)
 		truchi_enemigo.position(game.at(13,7))
 		
@@ -251,6 +256,13 @@ object batalla{
 			ganador.ganarXP()
 			ganador.subeDeNivel()
 			if(captura) player.capturarTruchi(truchi_enemigo)
+			if(peleaEntrenador){
+				addTrainer.lista().get(indiceEntrenador).eliminarElPrimero()
+				peleaEntrenador = false
+			}
+			
+			
+			
 		}		
 		
 		game.schedule(3000,{ principal.iniciar() })	
@@ -269,9 +281,6 @@ object batalla{
 	}
 			
 }
-
-
-
 
 
 
