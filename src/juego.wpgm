@@ -1,8 +1,10 @@
 import wollok.game.*
-import pepita.*
+import entrenador.*
+import escenarios.*
+import config.*
+import truchimones.*
 
-program juego {
-	game.title("Juego Base")
-	game.addVisual(pepita)
-	game.start()
+program Truchimon {
+	settingDeTipos.ejecutar()
+	intro.iniciar()
 }
