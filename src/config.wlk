@@ -6,7 +6,7 @@ object config {
 	var property starter = null
 	const property width = 24
 	const property height = 14
-	const property colisionables = [jungla, hospital, coliseo, casarandom, bosque, lago]
+	
 	var property escenarioActual = mensajes.introName()
 	
 	method run() {
@@ -20,12 +20,12 @@ object config {
 	
 	method agregarStarter(truchimon) {
 		starter = truchimon
-		self.cambiarEscenario(mensajes.principalName())
+		self.cambiarEscenario(principal)
 		principal.iniciar()
 	}
 	
 	method colisionaEn(proximaPosicion) {
-		return colisionables
+		return escenarioActual.colisionables()
 		.flatMap{
 			colisionable => colisionable.bloques()
 		}.any{
@@ -34,13 +34,25 @@ object config {
 	}
 	
 	method entraAlEscenarioEn(proximaPosicion) {
-		return colisionables
+		return escenarioActual.colisionables()
 		.map{
 			colisionable => colisionable.entrada()
 		}.any{
 			punto => punto == proximaPosicion
 		}
 	}
+	
+	method encuentraCuradorEn(proximaPosicion){
+		return escenarioActual.curadores()
+		.flatMap{
+			colisionable => colisionable.bloques()
+		}.any{
+			punto => punto == proximaPosicion
+		}
+	}
+	
+	
+	
 	
 	method cambiarEscenario(escenario) {
 		escenarioActual = escenario
@@ -54,6 +66,7 @@ object mensajes {
 	const property junglaName = "Jungla"
 	const property hospitalName = "Hospital"
 	const property coliseoName = "Coliseo"
-	const property principalName = "Principal"
+	const property principalName = "principal"
 	const property introName = "Intro"
+	const property interiorName = 'interiorHospital'
 }

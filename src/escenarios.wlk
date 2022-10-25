@@ -1,7 +1,6 @@
 import wollok.game.*
 import config.*
 import entrenador.*
-import jungla.*
 import truchimones.*
 
 class Estructura {}
@@ -141,11 +140,15 @@ object intro inherits Escenario {
 
 object principal inherits Escenario {
 	const property listaBloques = [] 
+	const property colisionables = [jungla, hospital, coliseo, casarandom, bosque, lago]
+	const property curadores = []
 	
 	override method iniciar() {
+		config.cambiarEscenario(self)
 		super()
 		game.addVisual(fondo)
-
+		entrenador.x(2)
+		entrenador.y(0)
 		game.addVisualCharacter(entrenador)
 		self.crearBordes()
 		
@@ -203,3 +206,121 @@ object backgnd {
 object text {
 	method image() = "starterOptions.png"
 } 
+
+
+object interiorHospital inherits Escenario{
+	const property colisionables = [paredHospital1,paredHospital2,paredHospital3,paredHospital4,paredHospital5,paredHospital6,paredHospital7,entradaPrincipal]
+	const property curadores = [camillas]
+	
+	override method iniciar(){
+		config.cambiarEscenario(self)
+		super()
+		game.addVisual(fondoHospital)
+		entrenador.x(7)
+		entrenador.y(2)
+		game.addVisualCharacter(entrenador)
+		self.crearBordes()
+		
+		keyboard.right().onPressDo{entrenador.moverR()}
+		keyboard.left().onPressDo{entrenador.moverL()}
+		keyboard.up().onPressDo{entrenador.moverU()}
+		keyboard.down().onPressDo{entrenador.moverD()}
+		
+		
+	}
+	
+	override method crearBordes(){
+		colisionables.flatMap{ escena => escena.bloques()}.forEach{
+			bloque => game.addVisual(
+				new BloqueDummy(position = bloque)
+			)
+		}
+		
+		game.addVisual(
+				new BloqueDummy(position = entradaPrincipal.entrada())
+			)
+		
+		
+		curadores.flatMap{ escena => escena.bloques()}.forEach{
+			bloque => game.addVisual(
+				new BloqueDummy(position = bloque)
+			)
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+	
+	
+	
+}
+
+object fondoHospital{
+	method image() = 'hospital.png'
+	method position() = game.origin()
+}
+
+
+object paredHospital1{
+	const collide = [new Position(x=4,y=1),new Position(x=5,y=1),new Position(x=6,y=1),new Position(x=9,y=1),new Position(x=10,y=1),new Position(x=11,y=1),
+	new Position(x=4,y=2),new Position(x=10,y=2),new Position(x=11,y=2)
+	]
+	const nocollide = matrices.generar(4,11,1,3,collide)
+	const property bloques = matrices.generar(0,23,0,3,nocollide)
+	const property entrada = []
+}
+
+object paredHospital2{
+	const property bloques = matrices.generar(21,23,0,13,[])
+	const property entrada = []
+}
+ object paredHospital3{
+ 	const nocollide = matrices.generar(14,18,4,5,[new Position(x=14,y=5),new Position(x=15,y=5)])+matrices.generar(16,19,8,8,[])
+ 	const property bloques = matrices.generar(14,21,4,8,nocollide)
+ 	const property entrada = []
+ }
+ 
+ object paredHospital4{
+ 	const nocollide = matrices.generar(15,20,11,11,[new Position(x=18,y=11)])+[new Position(x=15,y=12),new Position(x=20,y=12)]
+ 	const property bloques = matrices.generar(14,21,11,13,nocollide)
+ 	const property entrada = []
+ }
+ 
+ object paredHospital5{
+ 	const nocollide = matrices.generar(11,13,7,12,[new Position(x=11,y=7),new Position(x=12,y=12)])
+ 	const property bloques = matrices.generar(10,13,7,13,nocollide)
+ 	const property entrada = []
+ }
+ 
+ object paredHospital6{
+ 	const nocollide = matrices.generar(4,7,5,5,[])
+ 	const property bloques = matrices.generar(4,9,5,7,nocollide)
+ 	const property entrada = []
+ }
+ object paredHospital7{
+ 	const property bloques = [new Position(x=3,y=4),new Position(x=3,y=5)]
+ 	const property entrada = []
+ }
+ 
+ object camillas {
+ 	const property bloques = [new Position(x=20,y=9),new Position(x=15,y=12),new Position(x=20,y=12)]
+ }
+ 
+ object entradaPrincipal {
+ 	const property bloques = []
+ 	const property entrada = new Position(x=7,y=1)
+ }
+ 
+
+
+
+
+
+

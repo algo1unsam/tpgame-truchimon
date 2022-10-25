@@ -26,8 +26,8 @@ object entrenador inherits Estados{
 //CODIGO DE IMAGEN Y MOVIMIENTO
 	var img = 1
 	var dir = "F"
-	var y = 0
-	var x = 2
+	var property y = 0
+	var property x = 2
 	var property position = game.at(x,y)
 	
 	override method perfilPoke() = 'r'
@@ -42,16 +42,41 @@ object entrenador inherits Estados{
 		x += 1
 		x = x.limitBetween(0,config.width() - 1)
 		
-		if (config.colisionaEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
+		if (config.colisionaEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.principalName()) {
 			//game.say(self, mensajes.choque())
 			x -= 1
 			x = x.limitBetween(0,config.width() - 1)
 		}
 		
-		if (config.entraAlEscenarioEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
-			//game.say(self, mensajes.entrada())
-			junglaModo.iniciar()
+		if (config.colisionaEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.interiorName()) {
+			//game.say(self, mensajes.choque())
+			x -= 1
+			x = x.limitBetween(0,config.width() - 1)
 		}
+		
+		if (config.entraAlEscenarioEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.principalName()) {
+			//game.say(self, mensajes.entrada())
+			interiorHospital.iniciar()
+		}
+		
+		if (config.entraAlEscenarioEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.interiorName()) {
+			//game.say(self, mensajes.entrada())
+			principal.iniciar()
+		}
+		
+		if (config.encuentraCuradorEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.interiorName()) {
+			x -= 1
+			x = x.limitBetween(0,config.width() - 1)
+			pokemones.forEach{truchi => truchi.revivir()}
+			game.say(self,'CURADOS!!')
+			
+		}
+		
+		
+		
+		
+		
+		
 		position = game.at(x,y)
 	}
 	
@@ -61,16 +86,35 @@ object entrenador inherits Estados{
 		x -= 1
 		x = x.limitBetween(0,config.width() - 1)
 		
-		if (config.colisionaEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
+		if (config.colisionaEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.principalName()) {
 			game.say(self, mensajes.choque())
 			x += 1
 			x = x.limitBetween(0,config.width() - 1)
 		}
 		
-		if (config.entraAlEscenarioEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
-			game.say(self, mensajes.entrada())
-			junglaModo.iniciar()
+		if (config.colisionaEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.interiorName()) {
+			//game.say(self, mensajes.choque())
+			x += 1
+			x = x.limitBetween(0,config.width() - 1)
 		}
+		
+		if (config.entraAlEscenarioEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.principalName()) {
+			game.say(self, mensajes.entrada())
+			interiorHospital.iniciar()
+		}
+		
+		if (config.entraAlEscenarioEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.interiorName()) {
+			//game.say(self, mensajes.entrada())
+			principal.iniciar()
+		}
+		
+		if (config.encuentraCuradorEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.interiorName()) {
+			pokemones.forEach{truchi => truchi.revivir()}
+			game.say(self,'CURADOS!!')
+			x += 1
+			x = x.limitBetween(0,config.width() - 1)
+		}
+		
 		position = game.at(x,y)
 	}
 	
@@ -80,16 +124,35 @@ object entrenador inherits Estados{
 		y -= 1
 		y = y.limitBetween(0,config.height() - 1)
 		
-		if (config.colisionaEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
+		if (config.colisionaEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.principalName()) {
 			game.say(self, mensajes.choque())
 			y += 1
 			y = y.limitBetween(0,config.height() - 1)
 		}
 		
-		if (config.entraAlEscenarioEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
-			game.say(self, mensajes.entrada())
-			junglaModo.iniciar()
+		if (config.colisionaEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.interiorName()) {
+			//game.say(self, mensajes.choque())
+			y += 1
+			y = y.limitBetween(0,config.height() - 1)
 		}
+		
+		if (config.entraAlEscenarioEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.principalName()) {
+			game.say(self, mensajes.entrada())
+			interiorHospital.iniciar()
+		}
+		
+		if (config.entraAlEscenarioEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.interiorName()) {
+			//game.say(self, mensajes.entrada())
+			principal.iniciar()
+		}
+		
+		if (config.encuentraCuradorEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.interiorName()) {
+			pokemones.forEach{truchi => truchi.revivir()}
+			game.say(self,'CURADOS!!')
+			y += 1
+			y = y.limitBetween(0,config.height() - 1)
+		}
+		
 		position = game.at(x,y)
 	}
 	
@@ -99,16 +162,37 @@ object entrenador inherits Estados{
 		y += 1
 		y = y.limitBetween(0,config.height() - 1)
 		
-		if (config.colisionaEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
+		if (config.colisionaEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.principalName()) {
 			game.say(self, mensajes.choque())
 			y -= 1
 			y = y.limitBetween(0,config.height() - 1)
 		}
 		
-		if (config.entraAlEscenarioEn(game.at(x,y)) and config.escenarioActual() == mensajes.principalName()) {
-			game.say(self, mensajes.entrada())
-			junglaModo.iniciar()
+		if (config.colisionaEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.interiorName()) {
+			//game.say(self, mensajes.choque())
+			y -= 1
+			y = y.limitBetween(0,config.height() - 1)
 		}
+		
+		
+		if (config.entraAlEscenarioEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.principalName()) {
+			game.say(self, mensajes.entrada())
+			interiorHospital.iniciar()
+		}
+		
+		if (config.entraAlEscenarioEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.interiorName()) {
+			//game.say(self, mensajes.entrada())
+			principal.iniciar()
+		}
+		
+		if (config.encuentraCuradorEn(game.at(x,y)) and config.escenarioActual().toString() == mensajes.interiorName()) {
+			pokemones.forEach{truchi => truchi.revivir()}
+			game.say(self,'CURADOS!!')
+			y -= 1
+			y = y.limitBetween(0,config.height() - 1)
+		}
+		
+		
 		position = game.at(x,y)
 	}
 //FIN CODIGO DE IMAGEN Y MOVIMIENTO
