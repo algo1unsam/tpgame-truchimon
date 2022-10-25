@@ -1,0 +1,41 @@
+import truchimones.*
+import entrenador.*
+
+describe "Acciones del entrenador" {
+	const sarasamon = new Charmilion()
+	const evilSarasamon = new Charmilion()
+	const jajamon = new Zumbat()
+	const evilJajamon = new Zumbat()
+	
+	test "Entrenador tiene un truchimon starter" {
+		player.truchimones().add(sarasamon)
+		assert.equals(1, player.truchimones().size())
+	}
+	
+	test "Entrenador captura un truchimon" {
+		player.capturarTruchi(sarasamon)
+		assert.equals(1, player.truchimones().size())
+	}
+	
+	test "Entrenador captura 3 truchimones y el truchidex esta lleno" {
+		player.capturarTruchi(sarasamon)
+		player.capturarTruchi(evilSarasamon)
+		player.capturarTruchi(jajamon)
+		assert.that(player.truchidexLleno())
+	}
+	
+	test "Entrenador trata de capturar 4 truchimones, pero solo tiene 3" {
+		player.capturarTruchi(sarasamon)
+		player.capturarTruchi(evilSarasamon)
+		player.capturarTruchi(jajamon)
+		player.capturarTruchi(evilJajamon)
+		assert.equals(3, player.truchimones().size())
+	}
+	
+	test "Entrenador puede elegir a evilSarasamon" {
+		player.capturarTruchi(sarasamon)
+		player.capturarTruchi(evilSarasamon)
+		player.capturarTruchi(jajamon)
+		assert.that(player.puedeElegir(1))
+	}
+}
