@@ -1,6 +1,18 @@
+import truchimones.*
+import entrenador.*
 
-test "testX" {
-
-	assert.that(true)
-
+describe "Acciones del entrenador" {
+	const sarasamon = new Charmilion()
+	const jajamon = new Zumbat()
+	
+	test "Entrenador tiene un truchimon starter" {
+		entrenador.starter(sarasamon)
+		assert.equals(sarasamon, entrenador.starter())
+	}
+	
+	// TODO: test "Entrenador lucha contra un truchimon" {}
+	
+	// TODO: test "Entrenador lucha contra un truchimon y lo captura" {}
+	
+	// TODO: test "Entrenador lucha contra un truchimon y no lo captura" {}
 }
