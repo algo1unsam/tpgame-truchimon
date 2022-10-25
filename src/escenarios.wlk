@@ -45,11 +45,10 @@ object addTruchimon{
 }
 
 object addTrainer{
-	const property lista = [malazo]
+	const property lista = [malazo,capa,recapa]
 	method crear(){
-		lista.forEach({entrenador =>
-			game.addVisual(entrenador)
-		})
+		const trainer = lista.filter({en => en.tieneTruchimones()}).first()
+		game.addVisual(trainer)
 	}
 	
 	method ubicaciones(){

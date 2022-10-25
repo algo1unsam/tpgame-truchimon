@@ -40,7 +40,7 @@ class EntrenadorAmigo inherits Entrenador{
 	method hayTruchiBalls() = (truchiBalls != 0)	
 }
 
-object player inherits EntrenadorAmigo(truchiBalls = 1, capacidadTruchidex = 3){
+object player inherits EntrenadorAmigo(truchiBalls = 100, capacidadTruchidex = 3){
 	var property image = 'b1.png'
 		
 //CODIGO DE IMAGEN Y MOVIMIENTO
@@ -61,7 +61,11 @@ object player inherits EntrenadorAmigo(truchiBalls = 1, capacidadTruchidex = 3){
 			if(obj.esTruchimon()){
 				if (obj.esInvisibleEnJungla()) self.do(obj)
 				else{
-					//batalla.pelearCon(obj)
+					const truchi = obj.truchimones().first()
+					const indiceEntre = obj.indiceEnLista()
+					batalla.indiceEntrenador(indiceEntre) 
+					batalla.peleaEntrenador(true)
+					batalla.graficar(truchi)
 				}
 			}
 			
@@ -200,7 +204,21 @@ class EntrenadorEnemigo inherits Entrenador{
 	
 	method aumentarIndice(){
 		indiceTruchi+=1
-	}	
+	}
+	
+	method eliminarElPrimero(){
+		truchimones.remove(truchimones.first())
+	}
+	
+	method tieneTruchimones(){
+		return not truchimones.isEmpty()
+	}
+	
+	method indiceEnLista(){
+		return 0
+	}
+	
+		
 }
 
 object malazo inherits EntrenadorEnemigo(position = freeMap.randomPos() ){//todos nivel 1
@@ -208,23 +226,25 @@ object malazo inherits EntrenadorEnemigo(position = freeMap.randomPos() ){//todo
 		truchimones.addAll([new Ponita(estado=enemigo), new Glacion(estado = enemigo), new Jeodud(estado=enemigo)])
 		super()
 	}
-	method image() = 'B1.png'
+	method image() = 'e1.png'
 	
 }
 
-object capo inherits EntrenadorEnemigo(position = freeMap.randomPos() ){//todos nivel 3 VER como subir de nivel
+object capa inherits EntrenadorEnemigo(position = freeMap.randomPos() ){//todos nivel 3 VER como subir de nivel
 	override method initialize(){
 		truchimones.addAll([new Jorsi(estado=enemigo), new Magnemait(estado = enemigo), new Iivii(estado=enemigo)])
 		super()
 	}
-	method image() = 'L1.png'
+	method image() = 'e2.png'
+	override method indiceEnLista()=1
 }
 
-object recapo inherits EntrenadorEnemigo(position = freeMap.randomPos() ){//todos nivel 5
+object recapa inherits EntrenadorEnemigo(position = freeMap.randomPos() ){//todos nivel 5
 	override method initialize(){
 		truchimones.addAll([new Jorsi(estado=enemigo), new Magnemait(estado = enemigo), new Iivii(estado=enemigo)])
 		super()
 	}
 	
-	method image()='R1.png'
+	method image()='e3.png'
+	override method indiceEnLista()=2
 }
