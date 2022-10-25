@@ -1,8 +1,8 @@
 import wollok.game.*
 import config.*
 import entrenador.*
-import jungla.*
 import truchimones.*
+import batalla.* //comentar al terminar
 
 class Estructura {}
 
@@ -17,10 +17,31 @@ object matrices{
 		(ymin..ymax).forEach({y=>(xmin..xmax).forEach({x=>bloques.add(new Position(x=x,y=y))})})
 		bloques.removeAll(nocollide)
 		return bloques	
-	}
-	
+	}	
 }
 
+object freeMap inherits Estructura {
+	const property nogenerar = hospital.bloques() + lago.bloques() + casarandom.bloques() + bosque.bloques() + rocas.bloques() 
+	const property bloques = matrices.generar(0,23,0,13,nogenerar)
+}
+
+object addTruchimon{	
+	const libres = (0..(truchimonesTotales.tipos().size() - 1)).map({ x => x * 1 })
+	
+	method crear() {
+		10.times{ x =>
+			const index = libres.anyOne()//0.randomUpTo(truchimones.tipos().size()-1)
+			const truchimon = truchimonesTotales.tipos().get(index)
+			truchimon.position(self.randomPos())
+			game.addVisual(truchimon)
+			libres.remove(index)
+		}	
+	}
+	
+	method libres() = libres
+	
+	method randomPos() = freeMap.bloques().anyOne() 
+}
 
 object hospital inherits Estructura {	
 	const nocollide = [new Position(x=17,y=9),new Position(x=18,y=9),new Position(x=19,y=9),new Position(x=18,y=10)]
@@ -71,7 +92,7 @@ object bosque inherits Estructura {
 	const property entrada = []
 }
 
-object jungla inherits Estructura {
+object rocas inherits Estructura {
 	const b1 = matrices.generar(0,3,9,9,[])
 	const b2 = matrices.generar(3,3,11,13,[])
 	var property bloques = b1+b2
@@ -94,8 +115,6 @@ object coliseo inherits Estructura {
 
 	method image() = "jungla.png" // TODO: cambiar visual
 }
-
-
 
 class BloqueDummy {
 	var property position
@@ -122,19 +141,18 @@ class Escenario {
 object intro inherits Escenario {
 	override method iniciar() {
 		super()
-		game.addVisualIn(backgnd,game.origin())
-		game.addVisualIn(text,game.at(7,0))
+		game.addVisualIn(backgnd, game.origin())
+		game.addVisualIn(opciones, game.at(7,0))
 		
 		keyboard.num1().onPressDo{
-			config.agregarStarter(planta)
+			config.agregarStarter([new Charmilion( estado = amigo )])
 		}
 		keyboard.num2().onPressDo{
-			config.agregarStarter(agua)
+			config.agregarStarter([new Jorsi( estado = amigo )])
 		}
 		keyboard.num3().onPressDo{
-			config.agregarStarter(fuego)
-		}
-		
+			config.agregarStarter([new Lifeon( estado = amigo )])
+		}		
 		game.start()
 	}
 }
@@ -143,25 +161,22 @@ object principal inherits Escenario {
 	const property listaBloques = [] 
 	
 	override method iniciar() {
-		super()
+		super()		
 		game.addVisual(fondo)
-
-		game.addVisualCharacter(entrenador)
+		
+		game.addVisualCharacter(player)
+		addTruchimon.crear()
 		self.crearBordes()
 		
-		//game.addVisual(bulbasaur)
-		
-		entrenador.starter(config.starter())
-		
-		keyboard.right().onPressDo{entrenador.moverR()}
-		keyboard.left().onPressDo{entrenador.moverL()}
-		keyboard.up().onPressDo{entrenador.moverU()}
-		keyboard.down().onPressDo{entrenador.moverD()}
+		keyboard.right().onPressDo{player.mover('R')}
+		keyboard.left().onPressDo{player.mover('L')}
+		keyboard.up().onPressDo{player.mover('B')}
+		keyboard.down().onPressDo{player.mover('F')}
 	}
 	
 	override method crearBordes() {
 		// TODO: Eliminar mensaje cuando colisiona? Ver en entrenador.wlk
-		[hospital, casarandom, lago, jungla, bosque, coliseo].flatMap{ escena => escena.bloques()}.forEach{
+		[hospital, casarandom, lago, rocas, bosque, coliseo].flatMap{ escena => escena.bloques()}.forEach{
 			bloque => game.addVisual(
 				new BloqueDummy(position = bloque)
 			)
@@ -175,31 +190,29 @@ object principal inherits Escenario {
 	}
 }
 
-object junglaModo inherits Escenario {
+/*object junglaModo inherits Escenario {
 	override method iniciar() {
 		config.cambiarEscenario(self)
 		super()
 		game.ground('pasto_jungla.png')
-		game.addVisualCharacter(entrenador)
+		game.addVisualCharacter(player)
 		self.crearBordes()
 		
-		entrenador.starter(config.starter())
-		
-		keyboard.right().onPressDo{entrenador.moverR()}
-		keyboard.left().onPressDo{entrenador.moverL()}
-		keyboard.up().onPressDo{entrenador.moverU()}
-		keyboard.down().onPressDo{entrenador.moverD()}
+		keyboard.right().onPressDo{player.moverR()}
+		keyboard.left().onPressDo{player.moverL()}
+		keyboard.up().onPressDo{player.moverU()}
+		keyboard.down().onPressDo{player.moverD()}
 	}
 	
 	override method crearBordes() {
 		// TODO: Crear salida
 	}
-}
+}*/
 
 object backgnd {
 	method image() = "bgStarter.png"
 } 
 
-object text {
+object opciones {
 	method image() = "starterOptions.png"
 } 

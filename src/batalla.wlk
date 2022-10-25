@@ -1,131 +1,410 @@
 import wollok.game.*
 import truchimones.*
 import entrenador.*
+import escenarios.*
 
-object fondobatalla{
+object batalla{
+	var turno = 0
+	
+	var property truchi_amigo = null
+	var property truchi_enemigo = null
+	
+	const stats_uno = new CuadroEstado()
+	const stats_dos = new CuadroEstado()
+	
+	const heart_uno = new ObjetoHeart()
+	const heart_dos = new ObjetoHeart()
+	
+	const vidaAmigo = new VidaTruchi()
+	const vidaEnemigo = new VidaTruchi()
+	
+	const nombreAmigo = new NombreTruchi()
+	const nombreEnemigo = new NombreTruchi()
+	
+	method graficar(enemigo_){
+		game.clear()
+				
+		truchi_enemigo = enemigo_
+		truchi_amigo = player.truchimonElegido()
+		
+		self.settings()
+		self.pantalla()
+		self.controles()
+	}
+	
+	method esAmigo() = truchi_amigo
+	method esEnemigo() = truchi_enemigo	
+		
+	method settings() {
+		//Set amigo
+		truchi_amigo.visible(true)
+		truchi_amigo.position(game.at(6,4))
+		
+		//Set enemigo
+		truchi_enemigo.estado(enemigo)
+		truchi_enemigo.position(game.at(13,7))
+		
+		//Set menues
+		fondoBatalla.position(game.origin())
+		menuOpciones.position(game.at(5,0))
+		stats_uno.position(game.at(0,12))
+		stats_dos.position(game.at(18,12))
+		
+		//Set textos menues
+		txtMenu.generar(truchi_amigo)
+		txtMenu.position(game.at(12,2))
+		
+		//Set corazones
+		heart_uno.position(game.at(5,13))
+		heart_dos.position(game.at(23,13))
+		
+		//Set nro de vida
+		vidaAmigo.position(game.at(4,13))
+		vidaAmigo.generar(truchi_amigo)
+		vidaEnemigo.position(game.at(22,13))
+		vidaEnemigo.generar(truchi_enemigo)
+		
+		//Set nombres Truchis
+		nombreAmigo.position(game.at(1,13))
+		nombreAmigo.generar(truchi_amigo)
+		nombreEnemigo.position(game.at(19,13))
+		nombreEnemigo.generar(truchi_enemigo)
+			
+	}
+	
+	method controles(){
+		//keyboard.enter().onPressDo({self.iniciar()})
+		
+		(1..(truchi_amigo.movimientos().size())).forEach({ index => keyboard.num(index).onPressDo{self.turnoAmigo(index-1)}})
+		
+		//keyboard.q().onPressDo{self.actualizarTruchiEnUso(0)}
+		//keyboard.w().onPressDo{self.actualizarTruchiEnUso(1)}
+		//keyboard.e().onPressDo{self.actualizarTruchiEnUso(2)}
+		//keyboard.r().onPressDo{self.actualizarTruchiEnUso(3)}
+	}
+	
+	method pantalla() {
+		[	fondoBatalla, truchi_amigo, truchi_enemigo, stats_uno, stats_dos, 
+		 	menuOpciones, heart_uno, heart_dos, txtMenu, vidaAmigo, vidaEnemigo,
+		 	nombreAmigo, nombreEnemigo
+		].forEach({ e => game.addVisual(e)})		
+	}
+	
+	method iniciar(){
+		if (!truchi_amigo.vivo()) {
+			self.finBatalla(truchi_enemigo)
+		} else if (!truchi_enemigo.vivo()) {
+			self.finBatalla(truchi_amigo)
+		} else if (!(turno%2==0)){			
+			self.turnoEnemigo()						
+		}							
+	}
+	
+	method limpiarElemento(){
+		game.removeVisual(vidaAmigo)
+		game.removeVisual(vidaEnemigo)
+		vidaAmigo.generar(truchi_amigo)
+		vidaEnemigo.generar(truchi_enemigo)
+		game.addVisual(vidaAmigo)
+		game.addVisual(vidaEnemigo)
+	}
+	
+	method turnoAmigo(index){
+
+		var mov = null
+				
+		mov = truchi_amigo.movimientos().get(index)
+		truchi_amigo.atacar(truchi_enemigo,mov)
+		self.limpiarElemento()
+		//game.say(truchi_amigo,'Te ataco con '+mov.nombre())
+		
+		turno += 1
+		self.iniciar()
+		
+		
+		
+		/*var mov = null
+		console.println('Nuestro turno')
+		
+		if(not truchi_amigo.murio()){
+			if(truchi_amigo.movimientos().size()>indecs){
+				mov= truchi_amigo.movimientos().get(indecs)
+				turno+=1
+				console.println('Elegimos '+ mov.nombre())
+				
+				console.println('La vida de '+truchi_enemigo.nombre()+' es de '+truchi_enemigo.salud().toString())
+				truchi_amigo.atacar(truchi_enemigo,mov)
+				game.say(truchi_amigo,'Te ataco con '+mov.nombre())
+				
+				//textos.actualizarTextosMalo(t2)
+				console.println('La vida de '+truchi_enemigo.nombre()+' es de '+truchi_enemigo.salud().toString())
+				
+				if(not truchi_enemigo.murio()){
+					game.schedule(2000,{self.iniciar()})
+				} 
+				else {
+					if(enemigo.puedeSeguir()){
+						game.say(truchi_enemigo,'No doy mas!!')
+						self.actualizarTruchiEnemigo()
+						game.schedule(2000,{self.iniciar()})
+					}
+					else{
+						game.say(truchi_enemigo,'NOOO PERDIMOS!!!')
+						game.schedule(2000,{self.finBatalla(truchi_amigo)})
+					}	
+				}
+			}
+			else{
+				game.say(truchi_amigo,'No tengo tantos movimientos!!')
+			}
+		}
+		else{
+			game.say(truchi_amigo,'Rey no puedo atacar, no doy mas!!')
+		}*/			
+	}
+	
+	method turnoEnemigo(){
+
+		var mov = truchi_enemigo.movimientos().anyOne()
+		truchi_enemigo.atacar(truchi_amigo,mov)
+		self.limpiarElemento()
+		//game.say(truchi_enemigo,'Te ataco con '+mov.nombre())
+		turno += 1
+		self.iniciar()
+		
+		/*var mov = truchi_enemigo.movimientos().anyOne()
+		
+		
+		turno+=1
+		
+		console.println('Turno de '+truchi_enemigo.nombre())
+		
+		console.println('Eligio '+mov.nombre())
+		game.say(truchi_enemigo,'Te ataco con '+ mov.nombre())
+		
+		console.println('La vida de '+truchi_amigo.nombre()+' es de '+truchi_amigo.salud().toString())
+		truchi_enemigo.atacar(truchi_amigo,mov)
+		//textos.actualizarTextosBueno(t1)
+		console.println('La vida de '+truchi_amigo.nombre()+' es de '+truchi_amigo.salud().toString())
+		
+		if(not truchi_amigo.murio()){
+			game.schedule(2000,{self.iniciar()})
+			
+		} else {
+			if(entrenador.puedeSeguir()){
+				bgame.say(truchi_amigo,'No doy mas rey, cambiame por otro!!')
+			}
+			else{
+				game.say(truchi_amigo,'NOOO PERDIMOS!!!')
+				game.schedule(2000,{self.finBatalla(truchi_enemigo)})
+			}
+		}*/
+	}
+	
+	method finBatalla(ganador){
+		if(ganador.equals(truchi_amigo)){
+			ganador.ganarXP()
+			ganador.subeDeNivel()
+			player.capturarTruchi(truchi_enemigo)
+			if (player.truchimones().any( { truchi => truchi.equals(truchi_enemigo) })) console.println(truchi_enemigo.nombre() + ' Fue Capturado correctamente')
+		}		
+		
+		game.schedule(3000,{ principal.iniciar() })	
+	}		
+}
+
+// Objetos de la pantalla
+class ObjetosBatalla{
+	var property position = null
+}
+
+class ObjetoVacio{
+	var property position = null
+	method image() = 'vacio.png'	
+}
+
+class ObjetoHeart{
+	var property position = null
+	method image() = 'heart.png'
+}
+
+object fondoBatalla inherits ObjetosBatalla{
 	method image() = 'battle.png'
-	method position() = game.origin()
 }
 
-object cuadroDialogo {
+object menuOpciones inherits ObjetosBatalla{
 	method image() = 'cuadro.png'
-	method position() = game.at(5,0)
 }
 
-object linea1{
-	method image() = 'vacio.png'
-	method position() = game.at(9,2)
-	method text() = '
-Bienvenido a la Batalla!!! Elige tu pokemon...'
-}
-
-object opcion1{
-	method image() = 'vacio.png'
-	method position() = game.at(6,1)
-	method text() = '
-1 - '//+entrenador.pokemones.get(0)
-}
-
-object opcion2{
-	method image() = 'vacio.png'
-	method position() = game.at(9,1)
-	method text() = '
-2 - '//+entrenador.pokemones.get(1)
-}
-
-object opcion3{
-	method image() = 'vacio.png'
-	method position() = game.at(12,1)
-	method text() = '
-3 - '//+entrenador.pokemones.get(2)
-}
-
-object opcion4{
-	method image() = 'vacio.png'
-	method position() = game.at(15,1)
-	method text() = '
-4 - '//+entrenador.pokemones.get(3)
-}
-
-object stats{
+class CuadroEstado inherits ObjetosBatalla{
 	method image() = 'stats.png'
-	method position() = game.at(0,12)
 }
 
-object stats2{
-	method image() = 'stats.png'
-	method position() = game.at(18,12)
+// Necesario para los textos
+
+class Texto inherits ObjetoVacio{
+	var property txt = null
+	method text() = txt
+	
+	method initialize(){ txt = '\n' }
+}
+	
+class VidaTruchi inherits Texto{
+	method generar(truchi){
+		txt = '\n'
+		txt += truchi.salud().toString() + '/' + truchi.saludMaxima().toString()
+	}		
 }
 
-object cora1{
-	method image() = 'heart.png'
-	method position() = game.at(5,13)
+class NombreTruchi inherits Texto{
+	method generar(truchi){
+		txt = '\n'
+		txt += truchi.nombre()
+	}
 }
 
-object vidaNuestra{
-	method image() = 'vacio.png'
-	method position() = game.at(4,13)
-	method text() = "\nhola"
+object txtMenu inherits Texto{	
+	method generar(truchi) {
+		var lista = truchi.movimientos()
+		const tam = lista.size()
+		txt = '\n'
+		txt += '\n'
+		(0..tam-1).forEach({ x => txt += (x+1).toString() + '- ' + lista.get(x).nombre() + '    '})
+		txt = txt + '\n\n'
+		lista = player.truchimones()
+		(5..5+lista.size()-1).forEach({ x => txt += (x).toString() + '- ' + lista.get(x-5).nombre() + '    '})
+	}
 }
 
-object cora2{
-	method image() = 'heart.png'
-	method position() = game.at(23,13)
+class Globo{
+	var property position = null
+	var property text = null
+	method image() = 'globo.png'
 }
 
-object vidaOponente{
-	method image() = 'vacio.png'
-	method position() = game.at(22,13)
-	method text() = "\nchau"
-}
+/*
 
-object half{
-	method image() = 'half.png'
+object textos{
+	
+	var property nombreTruchiBueno = ''
+	var property nombreTruchiMalo = ''
+	var property vidaTruchiBueno = ''
+	var property vidaTruchiMalo = ''
+		
+	
+	method iniciarTextosBueno(truchi){
+		nombreTruchiBueno = '\n'+truchi.nombre()
+		vidaTruchiBueno = '\n'+truchi.salud().toString()+' / '+truchi.saludMaxima().toString()
+	}
+	
+	method iniciarTextosMalo(truchi){
+		nombreTruchiMalo = '\n'+truchi.nombre()
+		vidaTruchiMalo = '\n'+truchi.salud().toString()+' / '+truchi.saludMaxima().toString()
+	}
+	
+	method actualizarTextosBueno(truchi){
+		nombreTruchiBueno = '\n'+truchi.nombre()
+		vidaTruchiBueno =  '\n'+truchi.salud().toString()+' / '+truchi.saludMaxima().toString()
+	}
+	
+	method actualizarTextosMalo(truchi){
+		nombreTruchiMalo = '\n'+truchi.nombre()
+		vidaTruchiMalo =  '\n'+truchi.salud().toString()+' / '+truchi.saludMaxima().toString()
+	}
+	
+	method textoMovimientoTr1(indice){
+		return if(batalla.tr1().tieneEsteAtaque(indice)) batalla.tr1().movimientos().get(indice).nombre() else ''
+	}
+	
+	method textoTruchimon(indice){
+		return if(entrenador.tieneEsteTruchi(indice)) entrenador.truchimones().get(indice).nombre() else ''
+	}	
 }
 
 object batalla {
 	var property estatus = 5
 	var turno = 0
-	var indice = 0
 	var mov = null
-	var property tr1 = entrenador.truchimonElegido() //Cuando pase la pelea, vamos a setarlos en base a lo que decidamos
-	//var property tr2 = mikali
-	//var property tr1 = entrenador.pokemones().first()
-	var property tr2 = new Ponita(estado=enemigo)
+	
+	method initialize(){
+		entrenador.truchimonEnUso(tr1)	
+	}	
+	
+	//method seleccionTruchiEnemigo(indice){
+	 // 	tr2 = entrenadorEnemigo.truchimones().get(indice)
+	 // }
 	
 	method estadoT() = tr1.estado()
 	
-	method iniciar(){
-
-		game.width(24)
-		game.height(14)
-		game.addVisual(fondobatalla)
-		game.addVisual(cuadroDialogo)
-		game.addVisual(linea1)
-		game.addVisual(opcion1)
-		game.addVisual(opcion2)
-		game.addVisual(opcion3)
-		game.addVisual(opcion4)
-		
-		game.addVisual(stats)
-		game.addVisual(stats2)
-		game.addVisual(cora1)
-		game.addVisual(cora2)
-		game.addVisual(vidaNuestra)
-		game.addVisual(vidaOponente)
-		
-		tr1.position(game.at(6,4))
-		tr2.position(game.at(13,7))
-		game.addVisual(tr1)
-		game.addVisual(tr2)
-		
-		keyboard.enter().onPressDo({self.pelea(tr1,tr2)})
-		keyboard.num1().onPressDo{self.nuestroTurno(tr1,tr2,0)}
-		keyboard.num2().onPressDo{self.nuestroTurno(tr1,tr2,1)}
-		keyboard.num3().onPressDo{self.nuestroTurno(tr1,tr2,2)}
-		keyboard.num4().onPressDo{self.nuestroTurno(tr1,tr2,3)}
+	 // method empezar(enemigoo){
+		 // entrenadorEnemigo = enemigoo
+		//self.seleccionTruchiEnemigo(0)
+		 //self.iniciar()
+	 // }
+	
+	method iniciar(enemigo_){
+		//game.clear()
+		tr2 = enemigo_
+		//textos.iniciarTextosBueno(tr1)
+		//textos.iniciarTextosMalo(tr2)		
+		//Para la captura, en el metodo captura del entrenador, llamar a batalla.finBatalla()
 		game.start()		
 	}
+	
+	method actualizarTruchiEnUso(indice){
+		if(entrenador.tieneEsteTruchi(indice) ){
+			if(entrenador.puedeElegir(indice)){
+				entrenador.elegirTruchimon(indice)
+				if(tr1.murio()){
+					self.actualizarImagenTr1()
+					game.schedule(2000,{self.pelea(tr1,tr2)})
+					
+				}
+				else{
+					self.actualizarImagenTr1()
+					turno +=1
+					game.schedule(2000,{self.turnoPc(tr2,tr1)})
+				}
+				
+			}
+			else{
+				game.say(tr1,'Para rey, ese necesita descansar, lo re cagaron a palos!!')
+			}
+			
+		}
+		else{
+			game.say(tr1,'Para rey, no tenes tantos truchimones!!')
+		}
+		
+		
+		
+	}
+	
+	method actualizarImagenTr1(){
+		game.removeVisual(tr1)
+		tr1 = entrenador.truchimonEnUso()
+		tr1.position(game.at(6,4))
+		game.schedule(500,{game.addVisual(tr1)})
+		textos.actualizarTextosBueno(tr1)
+	}	
+	
+	method actualizarTruchiEnemigo(){
+		entrenadorEnemigo.aumentarIndice()
+		entrenadorEnemigo.elegirTruchimon()
+		game.schedule(500,{self.actualizarImagenTr2()})
+		game.schedule(2000,{self.turnoPc(tr2,tr1)})
+		
+		
+	}
+	
+	method actualizarImagenTr2(){
+		game.removeVisual(tr2)
+		tr2 = entrenadorEnemigo.truchimonEnUso()
+		tr2.position(game.at(13,7))
+		game.schedule(500,{game.addVisual(tr2)})
+		textos.actualizarTextosMalo(tr2)
+		
+	}	
 	
 	method pelea(t1,t2){		
 		if(turno%2==0){//Nuestro turno
@@ -133,7 +412,8 @@ object batalla {
 			console.println('Nuestro turno')			
 		} else {
 			//mov es random para el otro
-			self.turnoPc(t1,t2)// OJO ESTO PUEDE ESTAR MAL TUVE QUE CORREGIRLO POR QUE ESTABA DUPLICADO.
+			game.schedule(2000,{self.turnoPc(t1,t2)})
+			// OJO ESTO PUEDE ESTAR MAL TUVE QUE CORREGIRLO POR QUE ESTABA DUPLICADO.
 		}		
 	}
 	
@@ -144,39 +424,51 @@ object batalla {
 		//jungla.iniciar() o coliseo, volver a donde estemos.
 	}
 	
-	method nuestroTurno(t1,t2,indecs){
-		//console.println('Nuestro turno')
-		mov= t1.movimientos().get(indecs)
-		turno+=1
-		console.println('Elegimos '+ mov.nombre())
-		
-		console.println('La vida de '+t2.nombre()+' es de '+t2.salud().toString())
-		t1.atacar(t2,mov)
-		console.println('La vida de '+t2.nombre()+' es de '+t2.salud().toString())
-		
-		if(not t2.murio()){
-			self.pelea(t2,t1)
-		} else {
-			self.finBatalla(t1)
-		}		
+	method terminoBatalla(){
+		return entrenador.truchimones().all({truchi => truchi.murio()}) or entrenadorEnemigo.truchimones().all({truchi=>truchi.murio()})
 	}
 	
-	method turnoPc(t2,t1){
-		mov=t2.movimientos().anyOne()
-		turno+=1
-		
-		console.println('Turno de '+t2.nombre())
-		
-		console.println('Eligio '+mov.nombre())
-		
-		console.println('La vida de '+t1.nombre()+' es de '+t1.salud().toString())
-		t2.atacar(t1,mov)
-		console.println('La vida de '+t1.nombre()+' es de '+t1.salud().toString())
+	method nuestroTurno(t1,t2,indecs){
+		//console.println('Nuestro turno')
 		
 		if(not t1.murio()){
-			self.pelea(t1,t2)
-		} else {
-			self.finBatalla(t2)
+			if(t1.movimientos().size()>indecs){
+				mov= t1.movimientos().get(indecs)
+				turno+=1
+				console.println('Elegimos '+ mov.nombre())
+				
+				console.println('La vida de '+t2.nombre()+' es de '+t2.salud().toString())
+				t1.atacar(t2,mov)
+				game.say(t1,'Te ataco con '+mov.nombre())
+				
+				textos.actualizarTextosMalo(t2)
+				console.println('La vida de '+t2.nombre()+' es de '+t2.salud().toString())
+				
+				if(not t2.murio()){
+					game.schedule(2000,{self.pelea(t2,t1)})
+				} 
+				else {
+					if(entrenadorEnemigo.puedeSeguir()){
+						game.say(t2,'No doy mas!!')
+						self.actualizarTruchiEnemigo()
+						game.schedule(2000,{self.pelea(t2,t1)})
+					}
+					else{
+						game.say(t2,'NOOO PERDIMOS!!!')
+						game.schedule(2000,{self.finBatalla(t1)})
+					}	
+				}
+			}
+			else{
+				game.say(t1,'No tengo tantos movimientos!!')
+			}
 		}
-	}	
-}
+		else{
+			game.say(t1,'Rey no puedo atacar, no doy mas!!')
+		}
+		
+				
+	}
+	
+			
+}*/
