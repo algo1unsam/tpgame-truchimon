@@ -47,8 +47,15 @@ object addTruchimon{
 object addTrainer{
 	const property lista = [malazo,capa,recapa]
 	method crear(){
-		const trainer = lista.filter({en => en.tieneTruchimones()}).first()
-		game.addVisual(trainer)
+		const listita = lista.filter({en => en.tieneTruchimones()})
+		if(!listita.isEmpty()){
+			const trainer = listita.first()
+			game.addVisual(trainer)
+		}else{
+			game.say(player,'LES GANAMOS A TODOS!!')
+			game.schedule(2000,{game.stop()})
+		}
+		
 	}
 	
 	method ubicaciones(){
