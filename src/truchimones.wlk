@@ -26,6 +26,8 @@ class Truchimon{
 		
 	const property num = null 								// Numero del tipo -> truchif{01}.png siendo el nro el valor entre {}
 	
+	method esInvisibleEnJungla()=true
+	method esTruchimon()=true
 	method movimientosBase() = [tacle]
 	method movimientosPosibles() = [trompada, laManoDeDios]
 	method movimientos() = self.movimientosBase() + movimientos
@@ -34,19 +36,19 @@ class Truchimon{
 	
 	// Aprende el siguiente en la lista de posibles según su nivel
 	method aprenderMovimiento(){
-		const movimientoMejorado = movimientosPosibles.get(nivelActual-1)		
+		const movimientoMejorado = self.movimientosPosibles().get(nivelActual-1)		
 		if (!self.puedoAprender()) { self.olvidarUnMovimiento() } // si no puedo aprender borro el obsoleto 
 		movimientos.add(movimientoMejorado)		
-		game.say(entrenador, self.printString() + " aprendió a usar " + movimientoMejorado.printString())
+		game.say(self, self.printString() + " aprendió a usar " + movimientoMejorado.nombre())
 	}
 	
 	method olvidarUnMovimiento(){
 		const movimientoObsoleto = movimientos.first()
 		movimientos.remove(movimientoObsoleto)
-		game.say(entrenador, self.toString() + " olvidó " + movimientoObsoleto.toString())
+		game.say(self, self.printString() + " olvidó " + movimientoObsoleto.nombre())
 	}
 	
-	method puedoAprender() = (maxMovimientos < movimientos.size())
+	method puedoAprender() = (maxMovimientos > self.movimientos().size())
 	
 	method expPorLevel() = 100*1.3**(nivelActual+1)
 	
@@ -64,15 +66,15 @@ class Truchimon{
 	//Logica de niveles y aprender movimientos
 	method subeDeNivel(){
 		if( experiencia >= self.expPorLevel() and nivelActual < 5 ){
-			nivelActual += 1
-			game.say(entrenador, self.printString() + " subio a nivel -> " + nivelActual.toString())
+			game.say(self, self.printString() + " subio a nivel -> " + nivelActual.toString())
 			self.aumentoDeStats()
 			self.aprenderMovimiento()
+			nivelActual += 1
 		}
 	}	
 	
 	method ganarXP(){
-		experiencia += 40
+		experiencia += 200
 	}
 	
 	method aumentoDeStats(){
@@ -86,7 +88,7 @@ class Truchimon{
 		if (truchimon.puedeEsquivar()){			
 			game.say(truchimon,'OLEEEE TE ESQUIVE')
 		} else {
-			game.schedule(1000.randomUpTo(2500), {game.say(self, 'Te ataco con ' + movimiento.nombre())})
+			game.schedule(1000, {game.say(self, 'Te ataco con ' + movimiento.nombre())})
 			truchimon.recibirAtaque(movimiento,self)
 			if(self.tipo().esPlanta() and movimiento.esTipoPlanta()) self.curarse(truchimon, movimiento)
 		}
@@ -303,7 +305,7 @@ object settingDeTipos{
 class Charmilion inherits  	TruchimonFuego ( saludMaxima=20, ataque=3, ataqueEspecial=5, num='01' ){}	//truchi01
 class Ponita inherits  		TruchimonFuego ( saludMaxima=20, ataque=4, ataqueEspecial=5, num='15' ){}	//truchi15
 
-class Lifeon inherits 		TruchimonPlanta( saludMaxima=20, ataque=4, ataqueEspecial=3, num='03' ){}	//truchi03
+class Lifeon inherits 		TruchimonPlanta( saludMaxima=20, ataque=4, ataqueEspecial=3, num='02' ){}	//truchi02
 class Medestapod inherits 	TruchimonPlanta( saludMaxima=30, ataque=3, ataqueEspecial=1, num='07' ){}	//truchi07
 class Grukey inherits 		TruchimonPlanta( saludMaxima=20, ataque=4, ataqueEspecial=2, num='11' ){}	//truchi11
 
@@ -311,7 +313,7 @@ class Jorsi inherits 		TruchimonAgua  ( saludMaxima=20, ataque=4, ataqueEspecial
 class Sil inherits 			TruchimonAgua  ( saludMaxima=20, ataque=4, ataqueEspecial=4, num='16' ){}	//truchi16
 
 class Jeodud inherits 		TruchimonTierra( saludMaxima=30, ataque=3, ataqueEspecial=4, num='10' ){}	//truchi10
-class Umbrion inherits 		TruchimonTierra( saludMaxima=35, ataque=3, ataqueEspecial=3, num='02' ){}	//truchi02
+class Umbrion inherits 		TruchimonTierra( saludMaxima=35, ataque=3, ataqueEspecial=3, num='03' ){}	//truchi03
 
 class Magnemait inherits 	TruchimonMetal ( saludMaxima=15, ataque=4, ataqueEspecial=6, num='12' ){}	//truchi12
 class Aaron inherits 		TruchimonMetal ( saludMaxima=15, ataque=4, ataqueEspecial=6, num='04' ){}	//truchi04

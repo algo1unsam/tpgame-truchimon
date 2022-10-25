@@ -9,6 +9,10 @@ object batalla{
 	var property truchi_amigo = null
 	var property truchi_enemigo = null
 	
+	
+	var property captura = false
+	
+	
 	const stats_uno = new CuadroEstado()
 	const stats_dos = new CuadroEstado()
 	
@@ -20,6 +24,7 @@ object batalla{
 	
 	const nombreAmigo = new NombreTruchi()
 	const nombreEnemigo = new NombreTruchi()
+	
 	
 	method graficar(enemigo_){
 		game.clear()
@@ -73,14 +78,10 @@ object batalla{
 	}
 	
 	method controles(){
-		//keyboard.enter().onPressDo({self.iniciar()})
-		
 		(1..(truchi_amigo.movimientos().size())).forEach({ index => keyboard.num(index).onPressDo{self.turnoAmigo(index-1)}})
+		(5..(player.truchimonesListos().size()+4)).forEach({ index => keyboard.num(index).onPressDo{self.cambiarTruchiAmigo(index-5)}})
+		keyboard.num(9).onPressDo{self.elijoCapturar()}
 		
-		//keyboard.q().onPressDo{self.actualizarTruchiEnUso(0)}
-		//keyboard.w().onPressDo{self.actualizarTruchiEnUso(1)}
-		//keyboard.e().onPressDo{self.actualizarTruchiEnUso(2)}
-		//keyboard.r().onPressDo{self.actualizarTruchiEnUso(3)}
 	}
 	
 	method pantalla() {
@@ -91,35 +92,70 @@ object batalla{
 	}
 	
 	method iniciar(){
-		if (!truchi_amigo.vivo()) {
+		if (not player.puedeSeguir()) {
 			self.finBatalla(truchi_enemigo)
 		} else if (!truchi_enemigo.vivo()) {
 			self.finBatalla(truchi_amigo)
 		} else if (!(turno%2==0)){			
 			self.turnoEnemigo()						
-		}							
+		}else{
+			self.controles()
+		}
+		
 	}
 	
-	method limpiarElemento(){
+	method limpiarElementos(){
+		game.removeVisual(nombreAmigo)
+		game.removeVisual(nombreEnemigo)
 		game.removeVisual(vidaAmigo)
 		game.removeVisual(vidaEnemigo)
+		game.removeVisual(truchi_amigo)
+		game.removeVisual(truchi_enemigo)
+		game.removeVisual(txtMenu)
+	}
+	method generarElementos(){
+		
+		nombreAmigo.generar(truchi_amigo)
+		nombreEnemigo.generar(truchi_enemigo)
 		vidaAmigo.generar(truchi_amigo)
 		vidaEnemigo.generar(truchi_enemigo)
+		txtMenu.generar(truchi_amigo)
+	}
+	method agregarElementos(){
+		game.addVisual(truchi_amigo)
+		game.addVisual(truchi_enemigo)
+		game.addVisual(txtMenu)
+		game.addVisual(nombreAmigo)
+		game.addVisual(nombreEnemigo)
 		game.addVisual(vidaAmigo)
 		game.addVisual(vidaEnemigo)
 	}
 	
+	method regenerarTodo(){
+		self.limpiarElementos()
+		self.generarElementos()
+		self.agregarElementos()
+		//self.controles()
+	}
+	
+	
 	method turnoAmigo(index){
-
-		var mov = null
-				
-		mov = truchi_amigo.movimientos().get(index)
-		truchi_amigo.atacar(truchi_enemigo,mov)
-		self.limpiarElemento()
-		//game.say(truchi_amigo,'Te ataco con '+mov.nombre())
+		if(truchi_amigo.vivo()){
+			var mov = null
+					
+			mov = truchi_amigo.movimientos().get(index)
+			truchi_amigo.atacar(truchi_enemigo,mov)
+			self.regenerarTodo()
+			//game.say(truchi_amigo,'Te ataco con '+mov.nombre())
+			
+			turno += 1
+			self.iniciar()
+		}
+		else{
+			game.say(truchi_amigo,'Cambiame!!!')
+		}
 		
-		turno += 1
-		self.iniciar()
+		
 		
 		
 		
@@ -163,11 +199,19 @@ object batalla{
 		}*/			
 	}
 	
+	method elijoCapturar(){
+		captura= !captura
+		game.removeVisual(txtMenu)
+		txtMenu.generar(truchi_amigo)
+		game.addVisual(txtMenu)
+		
+	}
+	
 	method turnoEnemigo(){
 
 		var mov = truchi_enemigo.movimientos().anyOne()
 		truchi_enemigo.atacar(truchi_amigo,mov)
-		self.limpiarElemento()
+		self.regenerarTodo()
 		//game.say(truchi_enemigo,'Te ataco con '+mov.nombre())
 		turno += 1
 		self.iniciar()
@@ -202,16 +246,36 @@ object batalla{
 	}
 	
 	method finBatalla(ganador){
+		
 		if(ganador.equals(truchi_amigo)){
 			ganador.ganarXP()
 			ganador.subeDeNivel()
-			player.capturarTruchi(truchi_enemigo)
-			if (player.truchimones().any( { truchi => truchi.equals(truchi_enemigo) })) console.println(truchi_enemigo.nombre() + ' Fue Capturado correctamente')
+			if(captura) player.capturarTruchi(truchi_enemigo)
 		}		
 		
 		game.schedule(3000,{ principal.iniciar() })	
-	}		
+		
+	}
+	
+	method cambiarTruchiAmigo(indice){
+		self.limpiarElementos()
+		
+		truchi_amigo = player.truchimonesListos().get(indice)
+		truchi_amigo.position(game.at(6,4))
+		self.generarElementos()
+		self.agregarElementos()
+		
+		//self.controles()
+	}
+			
 }
+
+
+
+
+
+
+
 
 // Objetos de la pantalla
 class ObjetosBatalla{
@@ -271,8 +335,9 @@ object txtMenu inherits Texto{
 		txt += '\n'
 		(0..tam-1).forEach({ x => txt += (x+1).toString() + '- ' + lista.get(x).nombre() + '    '})
 		txt = txt + '\n\n'
-		lista = player.truchimones()
-		(5..5+lista.size()-1).forEach({ x => txt += (x).toString() + '- ' + lista.get(x-5).nombre() + '    '})
+		lista = player.truchimonesListos()
+		if(!lista.isEmpty())(5..5+lista.size()-1).forEach({ x => txt += (x).toString() + '- ' + lista.get(x-5).nombre() + '    '})
+		txt += '\n9 - Captura : ' + batalla.captura().toString()
 	}
 }
 
